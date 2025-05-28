@@ -96,3 +96,84 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+
+# Inventory Management System
+
+## Overview
+This Inventory Management System is designed to manage users, products, suppliers, categories, orders, transactions, warehouses, inventory, shipping, returns, and pricing. Below is the directory structure of the project.
+
+## Directory Structure
+
+src/
+├── users/
+│   ├── users.controller.ts
+│   ├── users.module.ts
+│   ├── users.service.ts
+│   └── dto/
+│       └── create-user.dto.ts
+├── products/
+│   ├── products.controller.ts
+│   ├── products.module.ts
+│   ├── products.service.ts
+│   └── dto/
+│       └── create-product.dto.ts
+├── suppliers/
+│   ├── suppliers.controller.ts
+│   ├── suppliers.module.ts
+│   ├── suppliers.service.ts
+│   └── dto/
+│       └── create-supplier.dto.ts
+├── categories/
+│   ├── categories.controller.ts
+│   ├── categories.module.ts
+│   ├── categories.service.ts
+│   └── dto/
+│       └── create-category.dto.ts
+├── orders/
+│   ├── orders.controller.ts
+│   ├── orders.module.ts
+│   ├── orders.service.ts
+│   └── dto/
+│       └── create-order.dto.ts
+├── transactions/
+│   ├── transactions.controller.ts
+│   ├── transactions.module.ts
+│   ├── transactions.service.ts
+│   └── dto/
+│       └── create-transaction.dto.ts
+├── warehouses/
+│   ├── warehouses.controller.ts
+│   ├── warehouses.module.ts
+│   ├── warehouses.service.ts
+│   └── dto/
+│       └── create-warehouse.dto.ts
+├── inventory/
+│   ├── inventory.controller.ts
+│   ├── inventory.module.ts
+│   ├── inventory.service.ts
+│   └── dto/
+│       └── create-inventory.dto.ts
+├── shipping/
+│   ├── shipping.controller.ts
+│   ├── shipping.module.ts
+│   ├── shipping.service.ts
+│   └── dto/
+│       └── create-shipping.dto.ts
+├── returns/
+│   ├── returns.controller.ts
+│   ├── returns.module.ts
+│   ├── returns.service.ts
+│   └── dto/
+│       └── create-return.dto.ts
+├── pricing/
+│   ├── pricing.controller.ts
+│   ├── pricing.module.ts
+│   ├── pricing.service.ts
+│   └── dto/
+│       └── create-pricing.dto.ts
+
+
+
+## Conclusion
+This README provides an overview of the key components in the Inventory Management System. The directory structure is organized to facilitate the management of various aspects of the system, ensuring maintainability and scalability as the project evolves.

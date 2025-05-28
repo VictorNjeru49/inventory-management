@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { CreateReturnDto } from './dto/create-return.dto';
-import { UpdateReturnDto } from './dto/update-return.dto';
+import { CreateReturnDto, UpdateReturnDto } from './dto';
 
 @Injectable()
 export class ReturnsService {
   create(createReturnDto: CreateReturnDto) {
-    return 'This action adds a new return';
+    return `This action adds a new return with details: ${JSON.stringify(createReturnDto)}`;
   }
 
-  findAll() {
+  findAll(search?: string) {
+    if (search) {
+      return `This action returns all returns matching the search term: ${search}`;
+    }
     return `This action returns all returns`;
   }
 
@@ -17,6 +19,11 @@ export class ReturnsService {
   }
 
   update(id: number, updateReturnDto: UpdateReturnDto) {
+    if (updateReturnDto.id !== id) {
+      throw new Error(
+        `ID mismatch: provided ${updateReturnDto.id}, expected ${id}`,
+      );
+    }
     return `This action updates a #${id} return`;
   }
 

@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto';
 
 @Injectable()
 export class UsersService {
   create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+    return `This action adds a new user with name ${createUserDto.firstName} ${createUserDto.lastName}`;
   }
 
-  findAll() {
+  findAll(search?: string) {
+    if (search) {
+      return `This action returns all users matching the search term: ${search}`;
+    }
     return `This action returns all users`;
   }
 
@@ -17,6 +19,9 @@ export class UsersService {
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
+    if (updateUserDto.firstName || updateUserDto.lastName) {
+      return `This action updates user #${id} with name ${updateUserDto.firstName} ${updateUserDto.lastName}`;
+    }
     return `This action updates a #${id} user`;
   }
 

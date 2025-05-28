@@ -5,10 +5,13 @@ import { UpdatePricingDto } from './dto/update-pricing.dto';
 @Injectable()
 export class PricingService {
   create(createPricingDto: CreatePricingDto) {
-    return 'This action adds a new pricing';
+    return `This action adds a new pricing with name: ${createPricingDto.discountId}`;
   }
 
-  findAll() {
+  findAll(search?: string) {
+    if (search) {
+      return `This action returns all pricing matching the search term: ${search}`;
+    }
     return `This action returns all pricing`;
   }
 
@@ -17,6 +20,9 @@ export class PricingService {
   }
 
   update(id: number, updatePricingDto: UpdatePricingDto) {
+    if (updatePricingDto.discountId) {
+      return `This action updates a #${id} pricing with new discountId: ${updatePricingDto.discountId}`;
+    }
     return `This action updates a #${id} pricing`;
   }
 

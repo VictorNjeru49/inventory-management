@@ -5,10 +5,13 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 @Injectable()
 export class OrdersService {
   create(createOrderDto: CreateOrderDto) {
-    return 'This action adds a new order';
+    return `This action adds a new order with details: ${JSON.stringify(createOrderDto)}`;
   }
 
-  findAll() {
+  findAll(search?: string) {
+    if (search) {
+      return `This action returns all orders matching the search term: ${search}`;
+    }
     return `This action returns all orders`;
   }
 
@@ -17,6 +20,9 @@ export class OrdersService {
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto) {
+    if (updateOrderDto) {
+      return `This action updates a #${id} order with details: ${JSON.stringify(updateOrderDto)}`;
+    }
     return `This action updates a #${id} order`;
   }
 

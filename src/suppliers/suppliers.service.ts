@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSupplierDto } from './dto/create-supplier.dto';
-import { UpdateSupplierDto } from './dto/update-supplier.dto';
+import { CreateSupplierDto, UpdateSupplierDto } from './dto';
 
 @Injectable()
 export class SuppliersService {
   create(createSupplierDto: CreateSupplierDto) {
-    return 'This action adds a new supplier';
+    return `This action adds a new supplier with name 
+    ${createSupplierDto.name} and contact ${createSupplierDto.contactInfo}`;
   }
 
-  findAll() {
+  findAll(search?: string) {
+    if (search) {
+      return `This action returns all suppliers matching the search term: ${search}`;
+    }
     return `This action returns all suppliers`;
   }
 
@@ -17,6 +20,9 @@ export class SuppliersService {
   }
 
   update(id: number, updateSupplierDto: UpdateSupplierDto) {
+    if (updateSupplierDto.name || updateSupplierDto.contactInfo) {
+      return `This action updates supplier #${id} with name ${updateSupplierDto.name} and contact ${updateSupplierDto.contactInfo}`;
+    }
     return `This action updates a #${id} supplier`;
   }
 

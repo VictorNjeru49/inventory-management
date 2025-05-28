@@ -1,0 +1,7 @@
+@url = http://localhost:8000
+
+###
+GET {{url}}/users
+
+###
+GET {{url}}/users/?search=John

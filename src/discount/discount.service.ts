@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { CreateDiscountDto } from './dto/create-discount.dto';
-import { UpdateDiscountDto } from './dto/update-discount.dto';
+import { CreateDiscountDto, UpdateDiscountDto } from './dto';
 
 @Injectable()
 export class DiscountService {
   create(createDiscountDto: CreateDiscountDto) {
-    return 'This action adds a new discount';
+    return createDiscountDto;
+    //  'This action adds a new discount';
   }
 
-  findAll() {
+  findAll(search?: string) {
+    if (search) {
+      return `the Output: ${search} `;
+    }
     return `This action returns all discount`;
   }
 
@@ -17,7 +20,7 @@ export class DiscountService {
   }
 
   update(id: number, updateDiscountDto: UpdateDiscountDto) {
-    return `This action updates a #${id} discount`;
+    return `This action updates a #${id} discount ${JSON.stringify(updateDiscountDto)}`;
   }
 
   remove(id: number) {

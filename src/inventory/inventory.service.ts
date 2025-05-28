@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { CreateInventoryDto } from './dto/create-inventory.dto';
-import { UpdateInventoryDto } from './dto/update-inventory.dto';
+import { CreateInventoryDto, UpdateInventoryDto } from './dto';
 
 @Injectable()
 export class InventoryService {
   create(createInventoryDto: CreateInventoryDto) {
-    return 'This action adds a new inventory';
+    // Example: return the received DTO for now to use the parameter
+    return createInventoryDto;
   }
 
-  findAll() {
+  findAll(search?: string) {
+    if (search) {
+      return `${search}`;
+    }
     return `This action returns all inventory`;
   }
 
@@ -17,7 +20,8 @@ export class InventoryService {
   }
 
   update(id: number, updateInventoryDto: UpdateInventoryDto) {
-    return `This action updates a #${id} inventory`;
+    // Example: return the id and the update DTO to use both parameters
+    return { id, updatedData: updateInventoryDto };
   }
 
   remove(id: number) {

@@ -6,40 +6,42 @@ import {
   Patch,
   Param,
   Delete,
+  ValidationPipe,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { DiscountService } from './discount.service';
-import { CreateDiscountDto } from './dto/create-discount.dto';
-import { UpdateDiscountDto } from './dto/update-discount.dto';
+import { CreateDiscountDto, UpdateDiscountDto } from './dto';
 
 @Controller('discount')
 export class DiscountController {
   constructor(private readonly discountService: DiscountService) {}
 
   @Post()
-  create(@Body() createDiscountDto: CreateDiscountDto) {
+  create(@Body(new ValidationPipe()) createDiscountDto: CreateDiscountDto) {
     return this.discountService.create(createDiscountDto);
   }
 
   @Get()
-  findAll() {
-    return this.discountService.findAll();
+  findAll(@Query('search') search?: string) {
+    return this.discountService.findAll(search);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.discountService.findOne(+id);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateDiscountDto: UpdateDiscountDto,
   ) {
     return this.discountService.update(+id, updateDiscountDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.discountService.remove(+id);
   }
 }

@@ -6,37 +6,42 @@ import {
   Patch,
   Param,
   Delete,
+  ValidationPipe,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ReturnsService } from './returns.service';
-import { CreateReturnDto } from './dto/create-return.dto';
-import { UpdateReturnDto } from './dto/update-return.dto';
+import { CreateReturnDto, UpdateReturnDto } from './dto';
 
 @Controller('returns')
 export class ReturnsController {
   constructor(private readonly returnsService: ReturnsService) {}
 
   @Post()
-  create(@Body() createReturnDto: CreateReturnDto) {
+  create(@Body(new ValidationPipe()) createReturnDto: CreateReturnDto) {
     return this.returnsService.create(createReturnDto);
   }
 
   @Get()
-  findAll() {
-    return this.returnsService.findAll();
+  findAll(@Query('search') search?: string) {
+    return this.returnsService.findAll(search);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.returnsService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReturnDto: UpdateReturnDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateReturnDto: UpdateReturnDto,
+  ) {
     return this.returnsService.update(+id, updateReturnDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.returnsService.remove(+id);
   }
 }

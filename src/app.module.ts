@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
@@ -13,6 +13,11 @@ import { ShippingModule } from './shipping/shipping.module';
 import { ReturnsModule } from './returns/returns.module';
 import { PricingModule } from './pricing/pricing.module';
 import { DiscountModule } from './discount/discount.module';
+import { PaymentsModule } from './payments/payments.module';
+import { DatabaseService } from './database/database.service';
+import { LoggerMiddleware } from './logger.middleware';
+import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -28,8 +33,20 @@ import { DiscountModule } from './discount/discount.module';
     ReturnsModule,
     PricingModule,
     DiscountModule,
+    PaymentsModule,
+
+    ConfigModule.forRoot({
+      isGlobal: true, // Make configuration available globally
+      envFilePath: '.env', // Load environment variables from .env file
+    }),
+
+    PrismaModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, DatabaseService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*'); // Apply middleware to all routes
+  }
+}
