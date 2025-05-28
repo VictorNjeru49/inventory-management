@@ -105,6 +105,7 @@ This Inventory Management System is designed to manage users, products, supplier
 
 ## Directory Structure
 
+``` text
 src/
 ├── users/
 │   ├── users.controller.ts
@@ -173,7 +174,7 @@ src/
 │   └── dto/
 │       └── create-pricing.dto.ts
 
-
+```
 
 ## Conclusion
 This README provides an overview of the key components in the Inventory Management System. The directory structure is organized to facilitate the management of various aspects of the system, ensuring maintainability and scalability as the project evolves.
