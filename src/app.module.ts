@@ -20,7 +20,7 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 import { OrderItemsModule } from './order-items/order-items.module';
 import { SeedModule } from './seed/seed.module';
-import { LogsModule } from './logs/logs.module';
+// import { LogsModule } from './logs/logs.module';
 import { RegisterModule } from './register/register.module';
 
 @Module({
@@ -45,7 +45,7 @@ import { RegisterModule } from './register/register.module';
     DatabaseModule,
     OrderItemsModule,
     SeedModule,
-    LogsModule,
+    // LogsModule,
     RegisterModule,
   ],
   controllers: [AppController],
