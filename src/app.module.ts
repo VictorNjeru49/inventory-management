@@ -17,7 +17,6 @@ import { PaymentsModule } from './payments/payments.module';
 import { DatabaseService } from './database/database.service';
 import { LoggerMiddleware } from './logger.middleware';
 import { ConfigModule } from '@nestjs/config';
-import { PrismaModule } from './prisma/prisma.module';
 import { DatabaseModule } from './database/database.module';
 import { OrderItemsModule } from './order-items/order-items.module';
 import { SeedModule } from './seed/seed.module';
@@ -43,17 +42,10 @@ import { RegisterModule } from './register/register.module';
     PricingModule,
     DiscountModule,
     PaymentsModule,
-
-    PrismaModule,
-
     DatabaseModule,
-
     OrderItemsModule,
-
     SeedModule,
-
     LogsModule,
-
     RegisterModule,
   ],
   controllers: [AppController],
