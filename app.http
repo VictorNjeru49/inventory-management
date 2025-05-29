@@ -5,3 +5,18 @@ GET {{url}}/users
 
 ###
 GET {{url}}/users/?search=John
+
+###
+POST {{url}}/register
+Content-Type: application/json
+
+{
+    "firstName": "john",
+    "lastName": "doe",
+    "email": "johndoe@gmail.com",
+    "password": "1234567890",
+    "role": "admin"
+}
+
+###
+GET {{url}}/register

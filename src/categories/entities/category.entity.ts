@@ -1,18 +1,26 @@
 import { Product } from '../../products/entities/product.entity';
-import { Column, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import {
+  Column,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Entity,
+  Relation,
+} from 'typeorm';
 
+@Entity()
 export class Category {
   @PrimaryGeneratedColumn()
   id: number;
+
   @Column()
   name: string;
+
   @Column()
   description: string;
-  @Column()
+
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
-  @OneToMany(() => Product, (product) => product.categoryId, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
+
+  @OneToMany(() => Product, (product) => product.category)
   products: Relation<Product[]>;
 }

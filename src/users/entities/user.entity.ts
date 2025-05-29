@@ -8,46 +8,59 @@ import {
   Relation,
 } from 'typeorm';
 import { Transaction } from '../../transactions/entities/transaction.entity';
+import { Register } from '../../register/entities/register.entity';
 
 export enum UserRole {
   ADMIN = 'admin',
   USER = 'user',
 }
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
+
   @Column()
   firstName: string;
+
   @Column()
   lastName: string;
+
   @Column()
   email: string;
+
   @Column()
   password: string;
+
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
-  role: UserRole; // e.g., 'admin', 'user', etc.
+  role: UserRole;
+
   @Column({ default: true })
   isActive: boolean;
-  @Column({ default: new Date() })
+
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
-  @Column({ default: new Date() })
+
+  @Column({ default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
-  @OneToMany(() => Order, (order) => order.userId, {
+
+  @OneToMany(() => Order, (order) => order.user, {
     cascade: true,
-    onDelete: 'CASCADE',
+    nullable: true,
   })
   orders: Relation<Order[]>;
 
-  @OneToMany(() => Return, (returnRecord) => returnRecord.userId, {
+  @OneToMany(() => Return, (returnEntity) => returnEntity.user, {
     cascade: true,
-    onDelete: 'CASCADE',
+    nullable: true,
   })
   returns: Relation<Return[]>;
 
-  @OneToMany(() => Transaction, (transaction) => transaction.userId, {
+  @OneToMany(() => Transaction, (transaction) => transaction.user, {
     cascade: true,
-    onDelete: 'CASCADE',
+    nullable: true,
   })
-  transaction: Relation<Transaction[]>;
+  transactions: Relation<Transaction[]>;
+  @OneToMany(() => Register, (register) => register.user)
+  registers: Register[];
 }

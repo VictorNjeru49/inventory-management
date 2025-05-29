@@ -1,7 +1,14 @@
 import { Product } from '../../products/entities/product.entity';
 import { Order } from '../../orders/entities/order.entity';
 import { User } from '../../users/entities/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  Relation,
+} from 'typeorm';
 
 export enum ReturnStatus {
   PENDING = 'pending',
@@ -10,39 +17,42 @@ export enum ReturnStatus {
   COMPLETED = 'completed',
   CANCELLED = 'cancelled',
 }
+
 @Entity()
 export class Return {
   @PrimaryGeneratedColumn()
-  id: number; // Primary key
+  id: number;
+
   @Column()
-  orderId: number; // Foreign key to Order
+  quantity: number;
+
+  @Column()
+  orderId: number;
+
   @Column()
   userId: number;
+
   @Column()
-  productId: number; // Foreign key to Product
+  productId: number;
+
   @Column()
-  quantity: number; // Quantity of the product being returned
-  @Column()
-  returnReason: string; // Reason for the return
+  returnReason: string;
+
   @Column({ type: 'enum', enum: ReturnStatus, default: ReturnStatus.PENDING })
-  returnStatus: ReturnStatus; // Status of the return (e.g., 'pending', 'approved', 'rejected')
-  @Column()
-  createdAt: Date; // Timestamp when the return was created, defaults to current timestamp
-  @ManyToOne(() => User, (user) => user, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
-  user: User;
+  returnStatus: ReturnStatus;
 
-  @ManyToOne(() => Order, (order) => order, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
-  order: Order;
+  @ManyToOne(() => Order, (order) => order.returns)
+  @JoinColumn({ name: 'orderId' })
+  order: Relation<Order>;
 
-  @ManyToOne(() => Product, (product) => product, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
-  product: Product;
+  @ManyToOne(() => User, (user) => user.returns)
+  @JoinColumn({ name: 'userId' })
+  user: Relation<User>;
+
+  @ManyToOne(() => Product, (product) => product.returns)
+  @JoinColumn({ name: 'productId' })
+  product: Relation<Product>;
+
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 }

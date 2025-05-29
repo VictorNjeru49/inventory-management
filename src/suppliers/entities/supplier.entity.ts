@@ -11,17 +11,19 @@ import {
 export class Supplier {
   @PrimaryGeneratedColumn()
   id: number;
+
   @Column()
   name: string;
+
   @Column()
   contactInfo: string;
+
   @Column()
   address: string;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
-  @OneToMany(() => Product, (product) => product.supplierId, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
+
+  @OneToMany(() => Product, (product) => product.supplier)
   products: Relation<Product[]>;
 }

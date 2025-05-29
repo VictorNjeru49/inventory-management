@@ -1,3 +1,4 @@
+import { Inventory } from '../../inventory/entities/inventory.entity';
 import { Category } from '../../categories/entities/category.entity';
 import { OrderItem } from '../../order-items/entities/order-item.entity';
 import { Supplier } from '../../suppliers/entities/supplier.entity';
@@ -5,11 +6,13 @@ import { Warehouse } from '../../warehouses/entities/warehouse.entity';
 import {
   Column,
   Entity,
-  ManyToMany,
+  JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm';
+import { Return } from '../../returns/entities/return.entity';
 
 @Entity()
 export class Product {
@@ -23,50 +26,49 @@ export class Product {
   description: string;
 
   @Column()
-  sku: string; // Stock Keeping Unit, a unique identifier for the product
+  sku: string;
 
   @Column()
   price: number;
+
   @Column()
-  orderItemsId: number;
+  categoryId: number;
+
+  @Column()
+  supplierId: number;
 
   @Column()
   warehouseId: number;
-  @Column()
-  categoryId: number; // Number of items available in stock
 
   @Column()
-  supplierId: number; // Foreign key to Supplier
+  stockQuantity: number;
 
-  @Column()
-  stockQuantity: number; // Number of items available in stock
-
-  @Column()
-  createdAt: Date; // Timestamp when the product was created, defaults to current timestamp
-
-  @Column()
-  updatedAt: Date; // Timestamp when the product was last updated, defaults to current timestamp
-  @ManyToMany(() => OrderItem, (orderItem) => orderItem, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
-  orderItems: Relation<OrderItem[]>;
-
-  @ManyToOne(() => Category, (category) => category, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(() => Category, (category) => category.products)
+  @JoinColumn({ name: 'categoryId' })
   category: Relation<Category>;
 
-  @ManyToOne(() => Supplier, (supplier) => supplier, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(() => Supplier, (supplier) => supplier.products)
+  @JoinColumn({ name: 'supplierId' })
   supplier: Relation<Supplier>;
 
-  @ManyToMany(() => Warehouse, (warehouse) => warehouse, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
-  warehouses: Relation<Warehouse[]>;
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
+  orderItems: Relation<OrderItem[]>;
+
+  @ManyToOne(() => Warehouse, (warehouse) => warehouse.products)
+  @JoinColumn({ name: 'warehouseId' })
+  warehouse: Relation<Warehouse>;
+
+  // New relationship to Inventory
+  @OneToMany(() => Inventory, (inventory) => inventory.product)
+  inventory: Inventory[];
+
+  // New relationship to Returns
+  @OneToMany(() => Return, (returnEntity) => returnEntity.product)
+  returns: Return[];
+
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @Column({ default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  updatedAt: Date;
 }

@@ -20,12 +20,15 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { DatabaseModule } from './database/database.module';
 import { OrderItemsModule } from './order-items/order-items.module';
+import { SeedModule } from './seed/seed.module';
+import { LogsModule } from './logs/logs.module';
+import { RegisterModule } from './register/register.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // Make configuration available globally
-      envFilePath: '.env', // Load environment variables from .env file
+      isGlobal: true,
+      envFilePath: '.env',
     }),
     ProductsModule,
     UsersModule,
@@ -46,6 +49,12 @@ import { OrderItemsModule } from './order-items/order-items.module';
     DatabaseModule,
 
     OrderItemsModule,
+
+    SeedModule,
+
+    LogsModule,
+
+    RegisterModule,
   ],
   controllers: [AppController],
   providers: [AppService, DatabaseService],

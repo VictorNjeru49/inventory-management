@@ -1,15 +1,17 @@
+import { Return } from '../../returns/entities/return.entity';
 import { OrderItem } from '../../order-items/entities/order-item.entity';
 import { Shipping } from '../../shipping/entities/shipping.entity';
-import { Transaction } from '../../transactions/entities/transaction.entity';
 import { User } from '../../users/entities/user.entity';
 import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
   OneToMany,
-  OneToOne,
+  Entity,
   Relation,
+  JoinColumn,
 } from 'typeorm';
+import { Transaction } from '../../transactions/entities/transaction.entity';
 
 export enum OrderStatus {
   Pending = 'pending',
@@ -18,35 +20,34 @@ export enum OrderStatus {
   Returned = 'returned',
 }
 
+@Entity()
 export class Order {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column()
-  orderId: number;
+
   @Column()
   userId: number;
+
   @Column()
   totalPrice: number;
+
   @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Pending })
   status: OrderStatus;
-  @ManyToOne(() => User, (user) => user)
+
+  @ManyToOne(() => User, (user) => user.orders)
+  @JoinColumn({ name: 'userId' }) // Specify the foreign key column
   user: Relation<User>;
 
-  @OneToMany(() => OrderItem, (orderItem) => orderItem.orderId, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order, { cascade: true })
   orderItems: Relation<OrderItem[]>;
 
-  @OneToOne(() => Shipping, (shippingRecord) => shippingRecord.orderId, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
-  shippingRecord: Relation<Shipping>;
+  @OneToMany(() => Shipping, (shipping) => shipping.order, { cascade: true })
+  shippings: Relation<Shipping[]>;
+  // New relationship to Returns
+  @OneToMany(() => Return, (returnEntity) => returnEntity.order)
+  returns: Return[];
 
-  @OneToOne(() => Transaction, (transaction) => transaction.orderId, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
-  transaction: Relation<Transaction>;
+  // New relationship to Transactions
+  @OneToMany(() => Transaction, (transaction) => transaction.order)
+  transactions: Transaction[];
 }

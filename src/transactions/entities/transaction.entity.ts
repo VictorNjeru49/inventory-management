@@ -1,6 +1,15 @@
+import { Payment } from '../../payments/entities/payment.entity';
 import { Order } from '../../orders/entities/order.entity';
 import { User } from '../../users/entities/user.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  Relation,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 
 export enum TransactionType {
   SALE = 'sale',
@@ -13,26 +22,34 @@ export enum TransactionType {
 export class Transaction {
   @PrimaryGeneratedColumn()
   id: number;
+
   @Column()
-  productId: number; // Foreign key to User entity
+  quantity: number;
+
   @Column()
   userId: number;
+
   @Column()
   orderId: number;
-  @Column()
-  quanity: number;
+
   @Column({
     type: 'enum',
     enum: TransactionType,
     default: TransactionType.SALE,
   })
-  transacrion_type: TransactionType; // e.g., 'credit', 'debit'
-  @Column({ default: new Date() })
+  transaction_type: TransactionType;
+
+  @ManyToOne(() => User, (user) => user.transactions)
+  @JoinColumn({ name: 'userId' })
+  user: Relation<User>;
+
+  @ManyToOne(() => Order, (order) => order.transactions)
+  @JoinColumn({ name: 'orderId' })
+  order: Relation<Order>;
+
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
-
-  @ManyToOne(() => User, (user) => user)
-  user: User;
-
-  @ManyToOne(() => Order, (order) => order)
-  order: Order;
+  // New relationship to Payment
+  @OneToMany(() => Payment, (payment) => payment.transaction)
+  payments: Payment[];
 }

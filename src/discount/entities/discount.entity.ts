@@ -4,11 +4,11 @@ export class Discount {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
-  noDiscount;
+  noDiscount: number;
   @Column()
-  partial;
+  partial: number;
   @Column()
-  promotional;
+  promotional: number;
   @Column()
-  loyalty;
+  loyalty: number;
 }

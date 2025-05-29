@@ -15,14 +15,21 @@ export class UsersService {
     return this.userRepo.save(user);
   }
 
-  findAll(search?: string): Promise<User[]> {
+  async findAll(search?: string): Promise<User[]> {
     if (search) {
-      console.log(`This action returns all users matching the search term`);
+      console.log(
+        `This action returns all users matching the search term: ${search}`,
+      );
       return this.userRepo.find({
-        where: [{ firstName: search }, { lastName: search }],
+        where: [{ firstName: search }, { lastName: search }, { email: search }],
+        relations: ['orders', 'returns', 'transactions', 'registers'],
       });
     }
-    return this.userRepo.find();
+
+    console.log(`This action returns all users`);
+    return this.userRepo.find({
+      relations: ['orders', 'returns', 'transactions', 'registers'],
+    });
   }
 
   findOne(id: number): Promise<User | null> {
