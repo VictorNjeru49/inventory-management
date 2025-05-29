@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Order } from '../../orders/entities/order.entity';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum ShippingStatus {
   PENDING = 'pending',
@@ -25,4 +26,9 @@ export class Shipping {
   shippedAt: Date;
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
+  @OneToOne(() => Order, (order) => order, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  order: Order;
 }

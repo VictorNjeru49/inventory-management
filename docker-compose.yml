@@ -1,19 +1,34 @@
-# docker-compose.yml
-
 version: '3.8'
-services:
 
-  postgres:
-    image: postgres:13.5
-    restart: always
+services:
+  Products:
+    image: postgres:15-alpine
+    container_name: Products
+    restart: unless-stopped
     environment:
-      - POSTGRES_USER=myuser
-      - POSTGRES_PASSWORD=mypassword
-    volumes:
-      - postgres:/var/lib/postgresql/data
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 14690
+      POSTGRES_DB: Products
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
     ports:
-      - '5432:5432'
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d Products"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - app-network
 
 volumes:
-  postgres:
+  pgdata:
+    name: Products-db-data
+    driver: local
 
+networks:
+  app-network:
+    driver: bridge

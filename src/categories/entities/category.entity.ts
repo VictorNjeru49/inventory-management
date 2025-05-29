@@ -1,4 +1,5 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Product } from '../../products/entities/product.entity';
+import { Column, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
 
 export class Category {
   @PrimaryGeneratedColumn()
@@ -9,4 +10,9 @@ export class Category {
   description: string;
   @Column()
   createdAt: Date;
+  @OneToMany(() => Product, (product) => product.categoryId, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  products: Relation<Product[]>;
 }

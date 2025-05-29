@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Transaction } from '../../transactions/entities/transaction.entity';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  Relation,
+} from 'typeorm';
 
 export enum PaymentStatus {
   Pending = 'Pending',
@@ -23,7 +30,11 @@ export class Payment {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   amount: number;
 
-  @Column({ type: 'enum', enum: PaymentMethod })
+  @Column({
+    type: 'enum',
+    enum: PaymentMethod,
+    default: PaymentMethod.CreditCard,
+  })
   paymentMethod: PaymentMethod; // e.g., 'Credit Card', 'PayPal', etc.
 
   @Column()
@@ -43,4 +54,10 @@ export class Payment {
 
   @Column({ type: 'enum', enum: PaymentStatus, default: PaymentStatus.Pending })
   status: PaymentStatus; // e.g., 'Pending', 'Completed', 'Failed'
+
+  @ManyToOne(() => Transaction, (transaction) => transaction, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  transaction: Relation<Transaction>;
 }

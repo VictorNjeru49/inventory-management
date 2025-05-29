@@ -1,4 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Return } from '../../returns/entities/return.entity';
+import { Order } from '../../orders/entities/order.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  Relation,
+} from 'typeorm';
+import { Transaction } from '../../transactions/entities/transaction.entity';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -24,4 +33,21 @@ export class User {
   createdAt: Date;
   @Column({ default: new Date() })
   updatedAt: Date;
+  @OneToMany(() => Order, (order) => order.userId, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  orders: Relation<Order[]>;
+
+  @OneToMany(() => Return, (returnRecord) => returnRecord.userId, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  returns: Relation<Return[]>;
+
+  @OneToMany(() => Transaction, (transaction) => transaction.userId, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  transaction: Relation<Transaction[]>;
 }

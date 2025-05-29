@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Product } from '../../products/entities/product.entity';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Relation,
+} from 'typeorm';
 
 @Entity()
 export class Supplier {
@@ -12,4 +19,9 @@ export class Supplier {
   address: string;
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
+  @OneToMany(() => Product, (product) => product.supplierId, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  products: Relation<Product[]>;
 }
