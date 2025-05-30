@@ -33,14 +33,14 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{url}}/users/
+DELETE {{url}}/users/2
 
 ###
 # Products
 GET {{url}}/products
 
 ###
-GET {{url}}/products/{id}
+GET {{url}}/products/5
 
 ###
 POST {{url}}/products
@@ -54,7 +54,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH {{url}}/products/{id}
+PATCH {{url}}/products/5
 Content-Type: application/json
 
 {
@@ -63,14 +63,14 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{url}}/products/{id}
+DELETE {{url}}/products/3
 
 ###
 # Orders
 GET {{url}}/orders
 
 ###
-GET {{url}}/orders/{id}
+GET {{url}}/orders/2
 
 ###
 POST {{url}}/orders
@@ -82,7 +82,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH {{url}}/orders/{id}
+PATCH {{url}}/orders/3
 Content-Type: application/json
 
 {
@@ -90,14 +90,14 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{url}}/orders/{id}
+DELETE {{url}}/orders/4
 
 ###
 # Inventory
 GET {{url}}/inventory
 
 ###
-GET {{url}}/inventory/{id}
+GET {{url}}/inventory/3
 
 ###
 POST {{url}}/inventory
@@ -109,7 +109,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH {{url}}/inventory/{id}
+PATCH {{url}}/inventory/2
 Content-Type: application/json
 
 {
@@ -117,4 +117,4 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{url}}/inventory/{id}
+DELETE {{url}}/inventory/5
