@@ -33,7 +33,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{url}}/users/{id}
+DELETE {{url}}/users/
 
 ###
 # Products
@@ -78,8 +78,8 @@ Content-Type: application/json
 
 {
     "userId": 1,
-    "productIds": [1, 2],
-    "totalAmount": 49.98
+    "totalPrice": 49.98,
+    "status": "pending"
 }
 
 ###

@@ -38,16 +38,28 @@ export class Order {
   @JoinColumn({ name: 'userId' }) // Specify the foreign key column
   user: Relation<User>;
 
-  @OneToMany(() => OrderItem, (orderItem) => orderItem.order, { cascade: true })
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {
+    cascade: true,
+    nullable: true,
+  })
   orderItems: Relation<OrderItem[]>;
 
-  @OneToMany(() => Shipping, (shipping) => shipping.order, { cascade: true })
+  @OneToMany(() => Shipping, (shipping) => shipping.order, {
+    cascade: true,
+    nullable: true,
+  })
   shippings: Relation<Shipping[]>;
   // New relationship to Returns
-  @OneToMany(() => Return, (returnEntity) => returnEntity.order)
+  @OneToMany(() => Return, (returnEntity) => returnEntity.order, {
+    nullable: true,
+    cascade: true,
+  })
   returns: Return[];
 
   // New relationship to Transactions
-  @OneToMany(() => Transaction, (transaction) => transaction.order)
+  @OneToMany(() => Transaction, (transaction) => transaction.order, {
+    nullable: true,
+    cascade: true,
+  })
   transactions: Transaction[];
 }

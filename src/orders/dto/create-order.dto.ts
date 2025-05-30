@@ -3,8 +3,6 @@ import { OrderStatus } from '../entities/order.entity';
 
 export class CreateOrderDto {
   @IsNumber()
-  orderId: number;
-  @IsNumber()
   userId: number;
   @IsNumber()
   totalPrice: number;
