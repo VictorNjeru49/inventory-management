@@ -4,7 +4,7 @@ export class CreateSupplierDto {
   @IsString()
   name: string;
   @IsNumber()
-  contactInfo: number;
+  contactInfo: string;
   @IsString()
   address: string;
   @IsDate()

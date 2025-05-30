@@ -1,31 +1,48 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTransactionDto, UpdateTransactionDto } from './dto';
+import { Transaction } from './entities/transaction.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TransactionsService {
-  create(createTransactionDto: CreateTransactionDto) {
-    return `This action adds a new transaction with product ID ${createTransactionDto.productId} and quantity ${createTransactionDto.quantity}`;
+  constructor(
+    @InjectRepository(Transaction)
+    private transactionRepo: Repository<Transaction>,
+  ) {}
+
+  async create(
+    createTransactionDto: CreateTransactionDto,
+  ): Promise<Transaction> {
+    const transaction = this.transactionRepo.create(createTransactionDto);
+    return this.transactionRepo.save(transaction);
   }
 
-  findAll(search?: string) {
+  async findAll(search?: number): Promise<Transaction[]> {
     if (search) {
-      return `This action returns all transactions matching the search term: ${search}`;
+      return this.transactionRepo.find({
+        where: [{ quantity: search }, { userId: search }, { orderId: search }],
+        relations: ['orders', 'user', 'payments'],
+      });
     }
-    return `This action returns all transactions`;
+    return this.transactionRepo.find({
+      relations: ['orders', 'user', 'payments'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} transaction`;
+  async findOne(id: number): Promise<Transaction | null> {
+    return this.transactionRepo.findOneBy({ id });
   }
 
-  update(id: number, updateTransactionDto: UpdateTransactionDto) {
-    if (updateTransactionDto.quantity) {
-      return `This action updates a #${id} transaction with new quantity ${updateTransactionDto.quantity}`;
-    }
-    return `This action updates a #${id} transaction`;
+  async update(
+    id: number,
+    updateTransactionDto: UpdateTransactionDto,
+  ): Promise<Transaction | null> {
+    await this.transactionRepo.update(id, updateTransactionDto);
+    return this.transactionRepo.findOneBy({ id });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} transaction`;
+  async remove(id: number): Promise<void> {
+    await this.transactionRepo.delete(id);
   }
 }

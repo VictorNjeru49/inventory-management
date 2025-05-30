@@ -1,4 +1,4 @@
-@url = http://localhost:8000
+@url = https://inventory-management-kx6n.onrender.com
 
 ###
 GET {{url}}/users

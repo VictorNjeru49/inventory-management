@@ -25,7 +25,7 @@ export class TransactionsController {
   }
 
   @Get()
-  findAll(@Query('search') search?: string) {
+  findAll(@Query('search') search?: number) {
     return this.transactionsService.findAll(search);
   }
 

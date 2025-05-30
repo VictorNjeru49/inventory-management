@@ -1,32 +1,50 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSupplierDto, UpdateSupplierDto } from './dto';
+import { Supplier } from './entities/supplier.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class SuppliersService {
-  create(createSupplierDto: CreateSupplierDto) {
-    return `This action adds a new supplier with name 
-    ${createSupplierDto.name} and contact ${createSupplierDto.contactInfo}`;
+  constructor(
+    @InjectRepository(Supplier)
+    private supplierRepo: Repository<Supplier>,
+  ) {}
+  async create(createSupplierDto: CreateSupplierDto): Promise<Supplier> {
+    const supplier = this.supplierRepo.create(createSupplierDto);
+    return this.supplierRepo.save(supplier);
   }
 
-  findAll(search?: string) {
+  async findAll(search?: string): Promise<Supplier[]> {
     if (search) {
-      return `This action returns all suppliers matching the search term: ${search}`;
+      return this.supplierRepo.find({
+        where: [{ name: search }, { contactInfo: search }, { address: search }],
+        relations: ['products'],
+      });
     }
-    return `This action returns all suppliers`;
+    return this.supplierRepo.find({
+      relations: ['products'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} supplier`;
+  async findOne(id: number): Promise<Supplier | null> {
+    return this.supplierRepo.findOneBy({ id });
   }
 
-  update(id: number, updateSupplierDto: UpdateSupplierDto) {
+  async update(
+    id: number,
+    updateSupplierDto: UpdateSupplierDto,
+  ): Promise<Supplier | null> {
     if (updateSupplierDto.name || updateSupplierDto.contactInfo) {
-      return `This action updates supplier #${id} with name ${updateSupplierDto.name} and contact ${updateSupplierDto.contactInfo}`;
+      throw new Error(
+        `This action updates supplier #${id} with name ${updateSupplierDto.name} and contact ${updateSupplierDto.contactInfo}`,
+      );
     }
-    return `This action updates a #${id} supplier`;
+    await this.supplierRepo.update(id, updateSupplierDto);
+    return this.supplierRepo.findOneBy({ id });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} supplier`;
+  async remove(id: number): Promise<void> {
+    await this.supplierRepo.delete(id);
   }
 }

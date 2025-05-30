@@ -1,32 +1,51 @@
 import { Injectable } from '@nestjs/common';
 import { CreateShippingDto } from './dto/create-shipping.dto';
 import { UpdateShippingDto } from './dto/update-shipping.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Shipping } from './entities/shipping.entity';
 
 @Injectable()
 export class ShippingService {
-  create(createShippingDto: CreateShippingDto) {
-    return `This action adds a new shipping with tracking number: ${createShippingDto.trackingNumber}`;
+  constructor(
+    @InjectRepository(Shipping)
+    private shippingRepo: Repository<Shipping>,
+  ) {}
+  async create(createShippingDto: CreateShippingDto): Promise<Shipping> {
+    const shipping = this.shippingRepo.create(createShippingDto);
+    return this.shippingRepo.save(shipping);
   }
 
-  findAll(search?: string) {
+  async findAll(search?: string): Promise<Shipping[]> {
     if (search) {
-      return `This action returns all shipping matching the search term: ${search}`;
+      return this.shippingRepo.find({
+        where: [{ trackingNumber: search }],
+        relations: ['orders'],
+      });
     }
-    return `This action returns all shipping`;
+    return this.shippingRepo.find({
+      relations: ['orders'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} shipping`;
+  async findOne(id: number): Promise<Shipping | null> {
+    return this.shippingRepo.findOneBy({ id });
   }
 
-  update(id: number, updateShippingDto: UpdateShippingDto) {
+  async update(
+    id: number,
+    updateShippingDto: UpdateShippingDto,
+  ): Promise<Shipping | null> {
     if (updateShippingDto.trackingNumber) {
-      return `This action updates a #${id} shipping with new tracking number: ${updateShippingDto.trackingNumber}`;
+      throw new Error(
+        `This action updates a #${id} shipping with new tracking number: ${updateShippingDto.trackingNumber}`,
+      );
     }
-    return `This action updates a #${id} shipping`;
+    await this.shippingRepo.update(id, updateShippingDto);
+    return this.shippingRepo.findOneBy({ id });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} shipping`;
+  async remove(id: number): Promise<void> {
+    await this.shippingRepo.delete(id);
   }
 }

@@ -1,33 +1,54 @@
 import { Injectable } from '@nestjs/common';
 import { CreateReturnDto, UpdateReturnDto } from './dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Return } from './entities/return.entity';
 
 @Injectable()
 export class ReturnsService {
-  create(createReturnDto: CreateReturnDto) {
-    return `This action adds a new return with details: ${JSON.stringify(createReturnDto)}`;
+  constructor(
+    @InjectRepository(Return)
+    private returnRepo: Repository<Return>,
+  ) {}
+  async create(createReturnDto: CreateReturnDto): Promise<Return> {
+    const returnee = this.returnRepo.create(createReturnDto);
+    return this.returnRepo.save(returnee);
   }
 
-  findAll(search?: string) {
+  async findAll(search?: number): Promise<Return[]> {
     if (search) {
-      return `This action returns all returns matching the search term: ${search}`;
+      return this.returnRepo.find({
+        where: [
+          { quantity: search },
+          { productId: search },
+          { userId: search },
+        ],
+        relations: ['orders', 'user', 'product'],
+      });
     }
-    return `This action returns all returns`;
+    return this.returnRepo.find({
+      relations: ['orders', 'user', 'product'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} return`;
+  async findOne(id: number): Promise<Return | null> {
+    return this.returnRepo.findOneBy({ id });
   }
 
-  update(id: number, updateReturnDto: UpdateReturnDto) {
+  async update(
+    id: number,
+    updateReturnDto: UpdateReturnDto,
+  ): Promise<Return | null> {
     if (updateReturnDto.id !== id) {
       throw new Error(
         `ID mismatch: provided ${updateReturnDto.id}, expected ${id}`,
       );
     }
-    return `This action updates a #${id} return`;
+    await this.returnRepo.update(id, updateReturnDto);
+    return this.returnRepo.findOneBy({ id });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} return`;
+  async remove(id: number): Promise<void> {
+    await this.returnRepo.delete(id);
   }
 }
