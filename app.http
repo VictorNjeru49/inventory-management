@@ -78,8 +78,7 @@ Content-Type: application/json
 
 {
     "userId": 1,
-    "totalPrice": 49.98,
-    "status": "pending"
+    "totalPrice": 49.98
 }
 
 ###
