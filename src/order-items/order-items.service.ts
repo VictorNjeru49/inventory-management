@@ -1,26 +1,52 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOrderItemDto } from './dto/create-order-item.dto';
 import { UpdateOrderItemDto } from './dto/update-order-item.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { OrderItem } from './entities/order-item.entity'; // Assuming you have an OrderItem entity defined
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class OrderItemsService {
-  create(createOrderItemDto: CreateOrderItemDto) {
-    return `This action adds a new orderItem ${createOrderItemDto.quantity}`;
+  constructor(
+    @InjectRepository(OrderItem)
+    private orderItemRepo: Repository<OrderItem>,
+  ) {}
+
+  async create(createOrderItemDto: CreateOrderItemDto): Promise<OrderItem> {
+    const orderItem = this.orderItemRepo.create(createOrderItemDto);
+    return this.orderItemRepo.save(orderItem);
   }
 
-  findAll() {
-    return `This action returns all orderItems`;
+  async findAll(): Promise<OrderItem[]> {
+    return this.orderItemRepo.find({
+      relations: ['order', 'product'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} orderItem`;
+  async findOne(id: number): Promise<OrderItem> {
+    const orderItem = await this.orderItemRepo.findOneBy({ id });
+    if (!orderItem) {
+      throw new NotFoundException(`Order item with ID ${id} not found`);
+    }
+    return orderItem;
   }
 
-  update(id: number, updateOrderItemDto: UpdateOrderItemDto) {
-    return `This action updates a #${id} orderItem ${updateOrderItemDto.orderId}`;
+  async update(
+    id: number,
+    updateOrderItemDto: UpdateOrderItemDto,
+  ): Promise<OrderItem> {
+    await this.orderItemRepo.update(id, updateOrderItemDto);
+    const updatedOrderItem = await this.orderItemRepo.findOneBy({ id });
+    if (!updatedOrderItem) {
+      throw new NotFoundException(`Order item with ID ${id} not found`);
+    }
+    return updatedOrderItem;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} orderItem`;
+  async remove(id: number): Promise<void> {
+    const result = await this.orderItemRepo.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Order item with ID ${id} not found`);
+    }
   }
 }

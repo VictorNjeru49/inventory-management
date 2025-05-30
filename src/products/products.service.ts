@@ -1,32 +1,65 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Product } from './entities/product.entity';
 
 @Injectable()
 export class ProductsService {
-  create(createProductDto: CreateProductDto) {
-    return `This action adds a new product with name: ${createProductDto.name}`;
+  constructor(
+    @InjectRepository(Product)
+    private productsRepo: Repository<Product>,
+  ) {}
+  async create(createProductDto: CreateProductDto): Promise<Product> {
+    const user = this.productsRepo.create(createProductDto);
+    return this.productsRepo.save(user);
   }
 
-  findAll(search?: string) {
+  async findAll(search?: string): Promise<Product[]> {
     if (search) {
-      return `This action returns all products matching the search term: ${search}`;
+      return this.productsRepo.find({
+        where: [{ name: search }, { description: search }, { sku: search }],
+        relations: [
+          'category',
+          'supplier',
+          'orderItems',
+          'warehouse',
+          'inventory',
+          'returns',
+        ],
+      });
     }
-    return `This action returns all products`;
+    return this.productsRepo.find({
+      relations: [
+        'category',
+        'supplier',
+        'orderItems',
+        'warehouse',
+        'inventory',
+        'returns',
+      ],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: number): Promise<Product | null> {
+    return this.productsRepo.findOneBy({ id });
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
+  async update(
+    id: number,
+    updateProductDto: UpdateProductDto,
+  ): Promise<Product | null> {
     if (updateProductDto.name) {
-      return `This action updates a #${id} product with new name: ${updateProductDto.name}`;
+      throw new Error(
+        `This action updates a #${id} product with new name: ${updateProductDto.name}`,
+      );
     }
-    return `This action updates a #${id} product`;
+    await this.productsRepo.update(id, updateProductDto);
+    return this.productsRepo.findOneBy({ id });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: number): Promise<void> {
+    await this.productsRepo.delete(id);
   }
 }

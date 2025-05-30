@@ -23,7 +23,7 @@ export class PaymentsController {
   }
 
   @Get()
-  findAll(@Query('search') search?: string) {
+  findAll(@Query('search') search?: number) {
     return this.paymentsService.findAll(search);
   }
 

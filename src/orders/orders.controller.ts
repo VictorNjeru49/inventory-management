@@ -23,7 +23,7 @@ export class OrdersController {
   }
 
   @Get()
-  findAll(@Query('search') search?: string) {
+  findAll(@Query('search') search?: number) {
     return this.ordersService.findAll(search);
   }
 

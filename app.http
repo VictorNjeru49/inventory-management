@@ -1,6 +1,7 @@
 @url = https://inventory-management-kx6n.onrender.com
 
 ###
+# Users
 GET {{url}}/users
 
 ###
@@ -19,4 +20,102 @@ Content-Type: application/json
 }
 
 ###
-GET {{url}}/register
+GET {{url}}/users/{id}
+
+###
+PATCH {{url}}/users/{id}
+Content-Type: application/json
+
+{
+    "firstName": "John",
+    "lastName": "Doe",
+    "role": "user"
+}
+
+###
+DELETE {{url}}/users/{id}
+
+###
+# Products
+GET {{url}}/products
+
+###
+GET {{url}}/products/{id}
+
+###
+POST {{url}}/products
+Content-Type: application/json
+
+{
+    "name": "Product A",
+    "description": "Description of Product A",
+    "price": 29.99,
+    "stock": 100
+}
+
+###
+PATCH {{url}}/products/{id}
+Content-Type: application/json
+
+{
+    "price": 24.99,
+    "stock": 90
+}
+
+###
+DELETE {{url}}/products/{id}
+
+###
+# Orders
+GET {{url}}/orders
+
+###
+GET {{url}}/orders/{id}
+
+###
+POST {{url}}/orders
+Content-Type: application/json
+
+{
+    "userId": 1,
+    "productIds": [1, 2],
+    "totalAmount": 49.98
+}
+
+###
+PATCH {{url}}/orders/{id}
+Content-Type: application/json
+
+{
+    "status": "shipped"
+}
+
+###
+DELETE {{url}}/orders/{id}
+
+###
+# Inventory
+GET {{url}}/inventory
+
+###
+GET {{url}}/inventory/{id}
+
+###
+POST {{url}}/inventory
+Content-Type: application/json
+
+{
+    "productId": 1,
+    "quantity": 50
+}
+
+###
+PATCH {{url}}/inventory/{id}
+Content-Type: application/json
+
+{
+    "quantity": 45
+}
+
+###
+DELETE {{url}}/inventory/{id}
