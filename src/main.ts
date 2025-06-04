@@ -3,11 +3,24 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import 'dotenv/config';
 import { ConfigService } from '@nestjs/config';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 // import { ALLExceptionsFilter } from './http-exception.filters';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
+
+  const config = new DocumentBuilder()
+    .setTitle('school Api')
+    .setDescription('Api for school')
+    .setVersion('1.0')
+    .addTag('students')
+    .build();
+
+  const documentfactory = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/docs', app, documentfactory, {
+    jsonDocumentUrl: '/api-json',
+  });
 
   const configService = app.get(ConfigService);
   const PORT = configService.getOrThrow<number>('PORT');
