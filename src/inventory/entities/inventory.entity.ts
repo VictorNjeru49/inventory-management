@@ -16,7 +16,7 @@ export class Inventory {
   @Column()
   stockQty: number;
 
-  @Column()
+  @Column({ nullable: false })
   productId: number;
 
   @Column()
