@@ -31,13 +31,13 @@ export class Product {
   @Column()
   price: number;
 
-  @Column()
+  @Column({ nullable: false })
   categoryId: number;
 
-  @Column()
+  @Column({ nullable: false })
   supplierId: number;
 
-  @Column()
+  @Column({ nullable: false })
   warehouseId: number;
 
   @Column()

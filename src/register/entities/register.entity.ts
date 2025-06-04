@@ -17,7 +17,7 @@ export class Register {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
-  @Column()
+  @Column({ nullable: false })
   userId: number;
 
   @Column()

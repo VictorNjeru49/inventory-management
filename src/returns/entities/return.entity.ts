@@ -26,13 +26,13 @@ export class Return {
   @Column()
   quantity: number;
 
-  @Column()
+  @Column({ nullable: false })
   orderId: number;
 
-  @Column()
+  @Column({ nullable: false })
   userId: number;
 
-  @Column()
+  @Column({ nullable: false })
   productId: number;
 
   @Column()

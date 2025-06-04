@@ -31,7 +31,7 @@ export class Payment {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   amount: number;
 
-  @Column()
+  @Column({ nullable: true })
   transactionId: number;
 
   @Column({

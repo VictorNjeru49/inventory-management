@@ -25,7 +25,7 @@ export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
-  @Column()
+  @Column({ nullable: false })
   userId: number;
 
   @Column()
@@ -35,7 +35,7 @@ export class Order {
   status: OrderStatus;
 
   @ManyToOne(() => User, (user) => user.orders)
-  @JoinColumn({ name: 'userId' }) // Specify the foreign key column
+  @JoinColumn({ name: 'userId' })
   user: Relation<User>;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {

@@ -19,7 +19,7 @@ export class Inventory {
   @Column({ nullable: false })
   productId: number;
 
-  @Column()
+  @Column({ nullable: false })
   warehouseId: number;
 
   @ManyToOne(() => Product, (product) => product.inventory)

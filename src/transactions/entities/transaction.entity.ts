@@ -26,10 +26,10 @@ export class Transaction {
   @Column()
   quantity: number;
 
-  @Column()
+  @Column({ nullable: true })
   userId: number;
 
-  @Column()
+  @Column({ nullable: true })
   orderId: number;
 
   @Column({

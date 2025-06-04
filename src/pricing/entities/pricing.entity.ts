@@ -8,7 +8,7 @@ export class Pricing {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
 
-  @Column()
+  @Column({ nullable: false })
   discountId: number;
 
   @Column()

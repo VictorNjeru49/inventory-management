@@ -11,11 +11,11 @@ import {
 
 @Entity()
 export class OrderItem {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: number;
-  @Column()
+  @Column({ nullable: false })
   orderId: number;
-  @Column()
+  @Column({ nullable: false })
   productId: number;
 
   @Column()

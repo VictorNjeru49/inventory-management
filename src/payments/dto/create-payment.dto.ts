@@ -26,5 +26,5 @@ export class CreatePaymentDto {
   status: PaymentStatus;
   @ApiProperty()
   @IsNumber()
-  transactionId: number; // Optional field for transaction ID
+  transactionId: number;
 }
