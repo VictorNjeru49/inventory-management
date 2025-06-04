@@ -24,6 +24,9 @@ import { SeedModule } from './seed/seed.module';
 import { RegisterModule } from './register/register.module';
 import { AuthModule } from './auth/auth.module';
 import { CacheMeModule } from './cache-me/cache-me.module';
+import { CacheInterceptor } from '@nestjs/cache-manager';
+import { AtGuard } from './auth/guards';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -53,7 +56,18 @@ import { CacheMeModule } from './cache-me/cache-me.module';
     CacheMeModule,
   ],
   controllers: [AppController],
-  providers: [AppService, DatabaseService],
+  providers: [
+    AppService,
+    DatabaseService,
+    {
+      provide: 'APP_INTERCEPTOR',
+      useClass: CacheInterceptor,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AtGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

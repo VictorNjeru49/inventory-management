@@ -3,40 +3,52 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
+  Query,
+  ParseIntPipe,
+  UseGuards,
+  UnauthorizedException,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Public } from './decoractors/public.decorator';
+import { AtGuard, RtGuard } from './guards';
 
+interface RequestWithUser extends Request {
+  user: {
+    sub: number;
+    email: string;
+    refreshToken: string;
+  };
+}
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  @Public()
+  SignInLocal(@Body() createAuthDto: CreateAuthDto) {
+    return this.authService.SignIn(createAuthDto);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  @UseGuards(AtGuard)
+  @Get('signout/:id')
+  signOut(@Param('id', ParseIntPipe) id: number) {
+    return this.authService.signOut(id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  @Public()
+  @UseGuards(RtGuard)
+  @Get('refresh')
+  refreshTokens(
+    @Query('id', ParseIntPipe) id: number,
+    @Req() req: RequestWithUser,
+  ) {
+    const user = req.user;
+    if (user.sub !== id) {
+      throw new UnauthorizedException("userId doesn't match");
+    }
+    return this.authService.refreshTokens(id, user.refreshToken);
   }
 }

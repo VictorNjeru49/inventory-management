@@ -35,6 +35,9 @@ export class User {
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
   role: UserRole;
 
+  @Column({ type: 'text', nullable: true, default: null })
+  hashedPassword: string | null;
+
   @Column({ default: true })
   isActive: boolean;
 

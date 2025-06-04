@@ -1,15 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { CacheMeService } from './cache-me.service';
-import { CreateCacheMeDto } from './dto/create-cache-me.dto';
-import { UpdateCacheMeDto } from './dto/update-cache-me.dto';
+import { CreateCacheMeDto } from './dto';
 
 @Controller('cache-me')
 export class CacheMeController {
@@ -20,23 +11,13 @@ export class CacheMeController {
     return this.cacheMeService.create(createCacheMeDto);
   }
 
-  @Get()
-  findAll() {
-    return this.cacheMeService.findAll();
+  @Get(':key')
+  get(@Param('key') key: string) {
+    return this.cacheMeService.get(key);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cacheMeService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCacheMeDto: UpdateCacheMeDto) {
-    return this.cacheMeService.update(+id, updateCacheMeDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cacheMeService.remove(+id);
+  @Delete(':key')
+  remove(@Param('key') key: string) {
+    return this.cacheMeService.remove(key);
   }
 }
