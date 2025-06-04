@@ -16,7 +16,7 @@ import { Return } from '../../returns/entities/return.entity';
 
 @Entity()
 export class Product {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column()

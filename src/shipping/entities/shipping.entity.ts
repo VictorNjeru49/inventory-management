@@ -17,7 +17,7 @@ export enum ShippingStatus {
 
 @Entity()
 export class Shipping {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column()

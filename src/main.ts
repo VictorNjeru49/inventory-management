@@ -11,10 +11,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
-    .setTitle('school Api')
-    .setDescription('Api for school')
+    .setTitle('Inventory Api')
+    .setDescription('To check inventory')
     .setVersion('1.0')
-    .addTag('students')
+    .addTag('Inventory')
     .build();
 
   const documentfactory = SwaggerModule.createDocument(app, config);
