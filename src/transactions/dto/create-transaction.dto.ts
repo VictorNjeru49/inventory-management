@@ -1,14 +1,19 @@
 import { IsDate, IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { TransactionType } from '../entities/transaction.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateTransactionDto {
+  @ApiProperty()
   @IsNumber()
-  productId: number; // Foreign key to User entity
+  productId: number;
+  @ApiProperty()
   @IsNumber()
   quantity: number;
+  @ApiProperty()
   @IsEnum(TransactionType)
-  transaction_type: TransactionType; // e.g., 'credit', 'debit'
+  transaction_type: TransactionType;
+  @ApiProperty()
   @IsOptional()
   @IsDate()
-  createdAt?: Date; // Optional, defaults to current date if not provided
+  createdAt?: Date;
 }

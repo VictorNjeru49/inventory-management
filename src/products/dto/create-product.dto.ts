@@ -1,22 +1,40 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString, IsDate } from 'class-validator';
 
 export class CreateProductDto {
+  @ApiProperty()
   @IsString()
-  name: string; // Product name
+  name: string;
+
+  @ApiProperty()
   @IsString()
-  description: string; // Product description
+  description: string;
+
+  @ApiProperty()
   @IsString()
-  sku: string; // Stock Keeping Unit, a unique identifier for the product
+  sku: string;
+
+  @ApiProperty()
   @IsNumber()
-  price: number; // Product price
+  price: number;
+
+  @ApiProperty()
   @IsNumber()
-  categoryId: number; // Product category
+  categoryId: number;
+
+  @ApiProperty()
   @IsNumber()
-  supplierId: number; // Supplier ID
+  supplierId: number;
+
+  @ApiProperty()
   @IsNumber()
-  stockQuantity: number; // Available stock quantity
+  stockQuantity: number;
+
+  @ApiProperty()
   @IsDate()
-  createdAt?: Date; // Timestamp when the product was created, defaults to current timestamp
+  createdAt?: Date;
+
+  @ApiProperty()
   @IsDate()
-  updatedAt?: Date; // Timestamp when the product was last updated, defaults to current timestamp}
+  updatedAt?: Date;
 }

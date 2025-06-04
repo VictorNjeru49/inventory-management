@@ -22,6 +22,8 @@ import { OrderItemsModule } from './order-items/order-items.module';
 import { SeedModule } from './seed/seed.module';
 // import { LogsModule } from './logs/logs.module';
 import { RegisterModule } from './register/register.module';
+import { AuthModule } from './auth/auth.module';
+import { CacheMeModule } from './cache-me/cache-me.module';
 
 @Module({
   imports: [
@@ -47,6 +49,8 @@ import { RegisterModule } from './register/register.module';
     SeedModule,
     // LogsModule,
     RegisterModule,
+    AuthModule,
+    CacheMeModule,
   ],
   controllers: [AppController],
   providers: [AppService, DatabaseService],

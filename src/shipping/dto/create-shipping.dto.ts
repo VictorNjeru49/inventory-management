@@ -1,15 +1,21 @@
 import { IsDate, IsEnum, IsNumber, IsString } from 'class-validator';
 import { ShippingStatus } from '../entities/shipping.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateShippingDto {
+  @ApiProperty()
   @IsNumber()
-  orderId: number; // Unique identifier for the order being shipped
+  orderId: number;
+  @ApiProperty()
   @IsString()
-  trackingNumber: string; // Tracking number for the shipment
+  trackingNumber: string;
+  @ApiProperty()
   @IsEnum(ShippingStatus)
-  status: ShippingStatus; // Status of the shipment (e.g., pending, shipped, delivered)
+  status: ShippingStatus;
+  @ApiProperty()
   @IsDate()
-  shippedAt: Date; // Date when the shipment was sent out
+  shippedAt: Date;
+  @ApiProperty()
   @IsDate()
-  createdAt: Date; // Date when the shipping record was created, defaults to current timestamp
+  createdAt: Date;
 }
