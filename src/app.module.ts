@@ -26,7 +26,7 @@ import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { AtGuard } from './auth/guards';
 import { APP_GUARD } from '@nestjs/core';
 import { Keyv, createKeyv } from '@keyv/redis';
-import { LogsModule } from './logs/logs.module';
+// import { LogsModule } from './logs/logs.module';
 import { CacheableMemory } from 'cacheable';
 
 @Module({
@@ -51,7 +51,7 @@ import { CacheableMemory } from 'cacheable';
     DatabaseModule,
     OrderItemsModule,
     SeedModule,
-    LogsModule,
+    // LogsModule,
     RegisterModule,
     AuthModule,
     CacheModule.registerAsync({

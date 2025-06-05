@@ -5,7 +5,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
-import { LogsService } from './logs/logs.service';
+// import { LogsService } from './logs/logs.service';
 import { Request, Response } from 'express';
 
 export interface MyResponseObj {
@@ -17,7 +17,7 @@ export interface MyResponseObj {
 
 @Catch()
 export class ALLExceptionsFilter extends BaseExceptionFilter {
-  private readonly logs = new LogsService();
+  // private readonly logs = new LogsService();
 
   private getClientIp(request: Request): string {
     const fowardedFor = request.headers['x-fowarded-for'];
@@ -32,7 +32,7 @@ export class ALLExceptionsFilter extends BaseExceptionFilter {
     const ctx = host.switchToHttp();
     const request = ctx.getRequest<Request>();
     const response = ctx.getResponse<Response>();
-    const clientIp = this.getClientIp(request);
+    // const clientIp = this.getClientIp(request);
 
     const myResponseObj: MyResponseObj = {
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -52,13 +52,13 @@ export class ALLExceptionsFilter extends BaseExceptionFilter {
 
     response.status(myResponseObj.statusCode).json(myResponseObj);
 
-    const logMessage =
-      typeof myResponseObj.response === 'string'
-        ? myResponseObj.response
-        : JSON.stringify(myResponseObj.response);
-    void this.logs.logToFile(
-      `ERROR: ${logMessage} - Path: ${request.url}`,
-      clientIp,
-    );
+    // const logMessage =
+    //   typeof myResponseObj.response === 'string'
+    //     ? myResponseObj.response
+    //     : JSON.stringify(myResponseObj.response);
+    // // void this.logs.logToFile(
+    // //   `ERROR: ${logMessage} - Path: ${request.url}`,
+    // //   clientIp,
+    // // );
   }
 }
