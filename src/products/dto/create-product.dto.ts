@@ -12,7 +12,7 @@ export class CreateProductDto {
 
   @ApiProperty()
   @IsString()
-  sku: string;
+  sku: number;
 
   @ApiProperty()
   @IsNumber()

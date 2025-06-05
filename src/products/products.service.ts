@@ -19,7 +19,7 @@ export class ProductsService {
   async findAll(search?: string): Promise<Product[]> {
     if (search) {
       return this.productsRepo.find({
-        where: [{ name: search }, { description: search }, { sku: search }],
+        where: [{ name: search }, { description: search }],
         relations: [
           'category',
           'supplier',

@@ -25,10 +25,10 @@ export class Product {
   @Column()
   description: string;
 
-  @Column()
-  sku: string;
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  sku: number;
 
-  @Column()
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
 
   @Column({ nullable: false })

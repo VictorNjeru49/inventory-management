@@ -11,12 +11,15 @@ import { Product } from '../products/entities/product.entity';
 import { Inventory } from '../inventory/entities/inventory.entity';
 import { Supplier } from '../suppliers/entities/supplier.entity';
 import { Warehouse } from '../warehouses/entities/warehouse.entity';
-import { Order } from '../orders/entities/order.entity';
+import { Order, OrderStatus } from '../orders/entities/order.entity';
 import { OrderItem } from '../order-items/entities/order-item.entity';
-import { Shipping } from '../shipping/entities/shipping.entity';
-import { Payment } from '../payments/entities/payment.entity';
+import { Shipping, ShippingStatus } from '../shipping/entities/shipping.entity';
+import { Payment, PaymentMethod } from '../payments/entities/payment.entity';
 import { Return } from '../returns/entities/return.entity';
-import { Transaction } from '../transactions/entities/transaction.entity';
+import {
+  Transaction,
+  TransactionType,
+} from '../transactions/entities/transaction.entity';
 
 @Injectable()
 export class SeedService {
@@ -56,14 +59,14 @@ export class SeedService {
     const users = await this.seedUsers();
     const categories = await this.seedCategories();
     const suppliers = await this.seedSuppliers();
-    const products = await this.seedProducts(categories, suppliers);
     const warehouses = await this.seedWarehouses();
+    const products = await this.seedProducts(categories, suppliers, warehouses);
     const inventories = await this.seedInventories(products, warehouses);
     const orders = await this.seedOrders(users);
     const orderItems = await this.seedOrderItems(orders, products);
     const payments = await this.seedPayments(orders);
     const shippings = await this.seedShippings(orders);
-    const returns = await this.seedReturns(orders);
+    const returns = await this.seedReturns(orders, users, products);
     const transactions = await this.seedTransactions(orders);
 
     return {
@@ -101,7 +104,6 @@ export class SeedService {
         description: faker.commerce.productDescription(),
       })),
     );
-
     return await this.CategoryRepo.save(categories);
   }
 
@@ -114,20 +116,17 @@ export class SeedService {
         address: faker.location.streetAddress(),
       })),
     );
-    try {
-      return await this.SupplierRepo.save(suppliers);
-    } catch (err) {
-      this.logger.error('Failed to seed suppliers', err);
-      return [];
-    }
+    return await this.SupplierRepo.save(suppliers);
   }
 
   async seedProducts(
     categories: Category[],
     suppliers: Supplier[],
+    warehouses: Warehouse[],
     count = 10,
   ): Promise<Product[]> {
-    if (!categories.length || !suppliers.length) return [];
+    if (!categories.length || !suppliers.length || !warehouses.length)
+      return [];
 
     const products = this.ProductRepo.create(
       Array.from({ length: count }).map((_, i) => ({
@@ -136,15 +135,13 @@ export class SeedService {
         price: parseFloat(faker.commerce.price()),
         category: categories[i % categories.length],
         supplier: suppliers[i % suppliers.length],
+        warehouse: warehouses[i % warehouses.length], // Ensure warehouseId is assigned
+        sku: faker.number.int(10),
+        stockQuantity: faker.number.int({ min: 1, max: 100 }),
       })),
     );
 
-    try {
-      return await this.ProductRepo.save(products);
-    } catch (err) {
-      this.logger.error('Failed to seed products', err);
-      return [];
-    }
+    return await this.ProductRepo.save(products);
   }
 
   async seedWarehouses(count = 5): Promise<Warehouse[]> {
@@ -152,15 +149,10 @@ export class SeedService {
       Array.from({ length: count }).map(() => ({
         name: faker.company.name(),
         location: faker.location.streetAddress(),
+        contactEmail: faker.internet.email(),
       })),
     );
-
-    try {
-      return await this.WarehouseRepo.save(warehouses);
-    } catch (err) {
-      this.logger.error('Failed to seed warehouses', err);
-      return [];
-    }
+    return await this.WarehouseRepo.save(warehouses);
   }
 
   async seedInventories(
@@ -174,16 +166,10 @@ export class SeedService {
       Array.from({ length: count }).map((_, i) => ({
         product: products[i % products.length],
         warehouse: warehouses[i % warehouses.length],
-        quantity: faker.number.int({ min: 1, max: 100 }),
+        stockQty: faker.number.int({ min: 1, max: 100 }),
       })),
     );
-
-    try {
-      return await this.InventoryRepo.save(inventories);
-    } catch (err) {
-      this.logger.error('Failed to seed inventories', err);
-      return [];
-    }
+    return await this.InventoryRepo.save(inventories);
   }
 
   async seedOrders(users: User[], count = 10): Promise<Order[]> {
@@ -192,16 +178,11 @@ export class SeedService {
     const orders = this.OrderRepo.create(
       Array.from({ length: count }).map((_, i) => ({
         user: users[i % users.length],
-        orderDate: faker.date.recent(),
+        totalPrice: parseFloat(faker.commerce.price()),
+        status: faker.helpers.arrayElement(Object.values(OrderStatus)),
       })),
     );
-
-    try {
-      return await this.OrderRepo.save(orders);
-    } catch (err) {
-      this.logger.error('Failed to seed orders', err);
-      return [];
-    }
+    return await this.OrderRepo.save(orders);
   }
 
   async seedOrderItems(
@@ -216,15 +197,13 @@ export class SeedService {
         order: orders[i % orders.length],
         product: products[i % products.length],
         quantity: faker.number.int({ min: 1, max: 5 }),
+        price: parseFloat(faker.commerce.price()),
+        totalPrice:
+          parseFloat(faker.commerce.price()) *
+          faker.number.int({ min: 1, max: 5 }),
       })),
     );
-
-    try {
-      return await this.OrderItemRepo.save(orderItems);
-    } catch (err) {
-      this.logger.error('Failed to seed order items', err);
-      return [];
-    }
+    return await this.OrderItemRepo.save(orderItems);
   }
 
   async seedPayments(orders: Order[], count = 10): Promise<Payment[]> {
@@ -233,17 +212,11 @@ export class SeedService {
     const payments = this.PaymentRepo.create(
       Array.from({ length: count }).map((_, i) => ({
         order: orders[i % orders.length],
-        method: faker.finance.transactionType(),
-        amount: faker.number.int({ min: 20, max: 500 }),
+        amount: parseFloat(faker.commerce.price()),
+        paymentMethod: faker.helpers.arrayElement(Object.values(PaymentMethod)),
       })),
     );
-
-    try {
-      return await this.PaymentRepo.save(payments);
-    } catch (err) {
-      this.logger.error('Failed to seed payments', err);
-      return [];
-    }
+    return await this.PaymentRepo.save(payments);
   }
 
   async seedShippings(orders: Order[], count = 10): Promise<Shipping[]> {
@@ -252,39 +225,32 @@ export class SeedService {
     const shippings = this.ShippingRepo.create(
       Array.from({ length: count }).map((_, i) => ({
         order: orders[i % orders.length],
-        address: faker.location.streetAddress(),
+        trackingNumber: faker.string.uuid(),
+        status: faker.helpers.arrayElement(Object.values(ShippingStatus)),
       })),
     );
-
-    try {
-      return await this.ShippingRepo.save(shippings);
-    } catch (err) {
-      this.logger.error('Failed to seed shippings', err);
-      return [];
-    }
+    return await this.ShippingRepo.save(shippings);
   }
 
-  async seedReturns(orders: Order[], count = 5): Promise<Return[]> {
-    if (!orders.length) return [];
+  async seedReturns(
+    orders: Order[],
+    users: User[],
+    products: Product[],
+    count = 10,
+  ): Promise<Return[]> {
+    if (!orders.length || !users.length || !products.length) return [];
 
     const returns = this.ReturnRepo.create(
       Array.from({ length: count }).map((_, i) => ({
-        order: orders[i % orders.length],
-        reason: faker.lorem.sentence(),
-        status: faker.helpers.arrayElement([
-          'requested',
-          'approved',
-          'rejected',
-        ]),
+        quantity: faker.number.int({ min: 1, max: 5 }), // Random quantity for returns
+        order: orders[i % orders.length], // Ensure there's an order associated
+        user: users[i % users.length], // Assign a valid user
+        product: products[i % products.length], // Assign a valid product
+        returnReason: faker.lorem.sentence(),
       })),
     );
 
-    try {
-      return await this.ReturnRepo.save(returns);
-    } catch (err) {
-      this.logger.error('Failed to seed returns', err);
-      return [];
-    }
+    return await this.ReturnRepo.save(returns);
   }
 
   async seedTransactions(orders: Order[], count = 10): Promise<Transaction[]> {
@@ -293,16 +259,12 @@ export class SeedService {
     const transactions = this.TransactionRepo.create(
       Array.from({ length: count }).map((_, i) => ({
         order: orders[i % orders.length],
-        type: faker.finance.transactionType(),
-        amount: faker.number.int({ min: 10, max: 500 }),
+        quantity: faker.number.int({ min: 1, max: 5 }),
+        transaction_type: faker.helpers.arrayElement(
+          Object.values(TransactionType),
+        ),
       })),
     );
-
-    try {
-      return await this.TransactionRepo.save(transactions);
-    } catch (err) {
-      this.logger.error('Failed to seed transactions', err);
-      return [];
-    }
+    return await this.TransactionRepo.save(transactions);
   }
 }

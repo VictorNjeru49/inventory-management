@@ -28,7 +28,7 @@ export class Order {
   @Column({ nullable: false })
   userId: number;
 
-  @Column()
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   totalPrice: number;
 
   @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Pending })
