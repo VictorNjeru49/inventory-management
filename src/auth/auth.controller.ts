@@ -26,7 +26,7 @@ interface RequestWithUser extends Request {
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
+  @Post('signin')
   @Public()
   SignInLocal(@Body() createAuthDto: CreateAuthDto) {
     return this.authService.SignIn(createAuthDto);

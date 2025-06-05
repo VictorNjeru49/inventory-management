@@ -36,7 +36,7 @@ export class User {
   role: UserRole;
 
   @Column({ type: 'text', nullable: true, default: null })
-  hashedPassword: string | null;
+  hashedRefreshToken: string | null;
 
   @Column({ default: true })
   isActive: boolean;

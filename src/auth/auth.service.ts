@@ -10,9 +10,9 @@ import { User } from '../users/entities/user.entity';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User) private profileRepository: Repository<User>,
+    @InjectRepository(User) private userRepository: Repository<User>,
     private jwtService: JwtService,
-    private configService: ConfigService,
+    private readonly configService: ConfigService,
   ) {}
 
   private async getTokens(userId: number, email: string) {
@@ -22,7 +22,7 @@ export class AuthService {
         {
           secret: this.configService.getOrThrow<string>('ACCESS_TOKEN_SECRET'),
           expiresIn: this.configService.getOrThrow<string>(
-            'ACCESS_TOKEN_EXPIRATION_TIME',
+            'ACCESS_TOKEN_EXPIRES_IN',
           ),
         },
       ),
@@ -34,7 +34,7 @@ export class AuthService {
         {
           secret: this.configService.getOrThrow<string>('REFRESH_TOKEN_SECRET'),
           expiresIn: this.configService.getOrThrow<string>(
-            'REFRESH_TOKEN_EXPIRATION_TIME',
+            'REFRESH_TOKEN_EXPIRES_IN',
           ),
         },
       ),
@@ -42,9 +42,23 @@ export class AuthService {
 
     return { accessToken: at, refreshToken: rt };
   }
+  private async hashData(data: string): Promise<string> {
+    const salt = await Bcrypt.genSalt(10);
+    return await Bcrypt.hash(data, salt);
+  }
+
+  // Helper method to remove password from profile
+  private async saveRefreshToken(userId: number, refreshToken: string) {
+    // hash refresh token
+    const hashedRefreshToken = await this.hashData(refreshToken);
+    // save hashed refresh token in the database
+    await this.userRepository.update(userId, {
+      hashedRefreshToken: hashedRefreshToken,
+    });
+  }
 
   async SignIn(createAuthDto: CreateAuthDto) {
-    const foundUser = await this.profileRepository.findOne({
+    const foundUser = await this.userRepository.findOne({
       where: { email: createAuthDto.email },
       select: ['id', 'email', 'password'],
     });
@@ -63,40 +77,41 @@ export class AuthService {
       foundUser.id,
       foundUser.email,
     );
+    await this.saveRefreshToken(foundUser.id, refreshToken);
     return { accessToken, refreshToken };
   }
 
   async signOut(userId: number) {
-    const res = await this.profileRepository.findOne({
+    const res = await this.userRepository.findOne({
       where: { id: userId },
-      select: ['id', 'email', 'hashedPassword'],
+      select: ['id', 'email', 'password'],
     });
 
     if (!res) {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
 
-    await this.profileRepository.update(userId, {
-      hashedPassword: null,
+    await this.userRepository.update(userId, {
+      hashedRefreshToken: null,
     });
     return { message: `User with id : ${userId} signed out successfully` };
   }
 
   async refreshTokens(id: number, refreshToken: string) {
-    const foundUser = await this.profileRepository.findOne({
+    const foundUser = await this.userRepository.findOne({
       where: { id },
-      select: ['id', 'email', 'hashedPassword'],
+      select: ['id', 'email', 'password'],
     });
 
     if (!foundUser) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-    if (!foundUser.hashedPassword) {
+    if (!foundUser.password) {
       throw new NotFoundException('No refresh token stored for this user');
     }
     const isRefreshedToken = await Bcrypt.compare(
       refreshToken,
-      foundUser.hashedPassword,
+      foundUser.password,
     );
 
     if (!isRefreshedToken) {

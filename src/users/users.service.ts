@@ -3,6 +3,7 @@ import { CreateUserDto, UpdateUserDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import * as Bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -10,9 +11,36 @@ export class UsersService {
     @InjectRepository(User)
     private userRepo: Repository<User>,
   ) {}
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    const user = this.userRepo.create(createUserDto);
-    return this.userRepo.save(user);
+
+  private async hashData(data: string): Promise<string> {
+    const salt = await Bcrypt.genSalt(10);
+    return await Bcrypt.hash(data, salt);
+  }
+
+  // Helper method to remove password from profile
+  private excludePassword(user: User): Partial<User> {
+    const { password, hashedRefreshToken, ...rest } = user;
+    return rest;
+  }
+
+  async create(createUserDto: CreateUserDto): Promise<Partial<User>> {
+    const existingUser = await this.userRepo.findOne({
+      where: { email: createUserDto.email },
+      select: ['id'], // Only select the id to avoid loading the entire profile
+    });
+    if (existingUser) {
+      throw new Error(
+        `Profile with email ${createUserDto.email} already exists`,
+      );
+    }
+    const hashedPassword = await this.hashData(createUserDto.password);
+    const user = this.userRepo.create({
+      ...createUserDto,
+      password: hashedPassword,
+    });
+    const savedProfile = await this.userRepo.save(user);
+
+    return this.excludePassword(savedProfile);
   }
 
   async findAll(search?: string): Promise<User[]> {
