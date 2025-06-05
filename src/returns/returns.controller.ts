@@ -11,7 +11,8 @@ import {
 } from '@nestjs/common';
 import { ReturnsService } from './returns.service';
 import { CreateReturnDto, UpdateReturnDto } from './dto';
-
+import { ApiBearerAuth } from '@nestjs/swagger';
+@ApiBearerAuth('AccessToken')
 @Controller('returns')
 export class ReturnsController {
   constructor(private readonly returnsService: ReturnsService) {}

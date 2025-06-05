@@ -11,11 +11,13 @@ import {
 } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { CreatePaymentDto, UpdatePaymentDto } from './dto';
-
+import { Public } from 'src/auth/decoractors/public.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
+@ApiBearerAuth('AccessToken')
 @Controller('payments')
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
-
+  @Public()
   @Post()
   create(@Body(new ValidationPipe()) createPaymentDto: CreatePaymentDto) {
     return this.paymentsService.create(createPaymentDto);

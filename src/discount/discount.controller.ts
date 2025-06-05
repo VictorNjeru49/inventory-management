@@ -12,11 +12,13 @@ import {
 } from '@nestjs/common';
 import { DiscountService } from './discount.service';
 import { CreateDiscountDto, UpdateDiscountDto } from './dto';
-
+import { Public } from 'src/auth/decoractors/public.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
+@ApiBearerAuth('AccessToken')
 @Controller('discount')
 export class DiscountController {
   constructor(private readonly discountService: DiscountService) {}
-
+  @Public()
   @Post()
   create(@Body(new ValidationPipe()) createDiscountDto: CreateDiscountDto) {
     return this.discountService.create(createDiscountDto);

@@ -11,11 +11,13 @@ import {
 } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
 import { CreateInventoryDto, UpdateInventoryDto } from './dto';
-
+import { Public } from 'src/auth/decoractors/public.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
+@ApiBearerAuth('AccessToken')
 @Controller('inventory')
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
-
+  @Public()
   @Post()
   create(@Body(new ValidationPipe()) createInventoryDto: CreateInventoryDto) {
     return this.inventoryService.create(createInventoryDto);

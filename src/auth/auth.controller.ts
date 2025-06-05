@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
+import { Request } from 'express';
 import { Public } from './decoractors/public.decorator';
 import { AtGuard, RtGuard } from './guards';
 
@@ -32,6 +33,7 @@ export class AuthController {
     return this.authService.SignIn(createAuthDto);
   }
 
+  @Public()
   @UseGuards(AtGuard)
   @Get('signout/:id')
   signOut(@Param('id', ParseIntPipe) id: number) {

@@ -11,7 +11,8 @@ import {
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto, UpdateTransactionDto } from './dto';
-
+import { ApiBearerAuth } from '@nestjs/swagger';
+@ApiBearerAuth('AccessToken')
 @Controller('transactions')
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}

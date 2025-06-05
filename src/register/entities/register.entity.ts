@@ -14,7 +14,7 @@ export enum UserRole {
 
 @Entity()
 export class Register {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ nullable: false })
@@ -22,6 +22,8 @@ export class Register {
 
   @Column()
   email: string;
+  @Column()
+  password: string;
   @Column({
     type: 'enum',
     enum: UserRole,

@@ -1,22 +1,23 @@
 version: '3.8'
 
 services:
-  Products:
+  user-management-db:
     image: postgres:15-alpine
-    container_name: Products
+    container_name: inventory_management-db
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 14690
-      POSTGRES_DB: Products
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: inventory_management
       POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+      NEON_DATABASE_URL: ${NEON_DATABASE_URL}  
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./init-scripts:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d Products"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d inventory_managementsystem-db"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -24,9 +25,23 @@ services:
     networks:
       - app-network
 
+  redis:
+    image: redis:8.0-alpine
+    container_name: inventory-management-redis-data
+    restart: unless-stopped
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+    ports:
+      - "6379:6379"  
+    volumes:
+      - redisdata:/data
+    networks:
+      - app-network
+
 volumes:
   pgdata:
-    name: Products-db-data
+    name: inventory-management-db-data
+    driver: local
+  redisdata:  
     driver: local
 
 networks:

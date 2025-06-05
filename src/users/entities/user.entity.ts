@@ -13,11 +13,12 @@ import { Register } from '../../register/entities/register.entity';
 export enum UserRole {
   ADMIN = 'admin',
   USER = 'user',
+  MANAGER = 'manager',
 }
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()

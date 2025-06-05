@@ -30,6 +30,7 @@ export class RegisterService {
       const newRegister = this.registerRepository.create({
         email: savedUser.email,
         role: createRegisterDto.role,
+        password: savedUser.password,
         user: savedUser,
       });
 

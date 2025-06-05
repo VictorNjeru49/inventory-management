@@ -36,7 +36,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
         return {
           type: 'postgres',
-          url: connectionString, // Use the connection string for Neon
+          url: connectionString,
           autoLoadEntities: true,
           synchronize: configService.getOrThrow<boolean>('DB_SYNC', true),
           logging: configService.getOrThrow<boolean>('DB_LOGGING', false),

@@ -4,7 +4,7 @@ import { DataSource, Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
 
 import { User } from '../users/entities/user.entity';
-import { Register } from '../register/entities/register.entity';
+import { Register, UserRole } from '../register/entities/register.entity';
 import * as bcrypt from 'bcrypt';
 import { Category } from '../categories/entities/category.entity';
 import { Product } from '../products/entities/product.entity';
@@ -230,6 +230,21 @@ export class SeedService {
       })),
     );
     return await this.ShippingRepo.save(shippings);
+  }
+
+  async seedRegisters(users: User[], count: number = 10): Promise<Register[]> {
+    if (!users.length) return [];
+
+    const registers = this.RegisterRepo.create(
+      Array.from({ length: count }).map((_, i) => ({
+        userId: users[i % users.length].id,
+        email: users[i % users.length].email,
+        password: 'password',
+        role: faker.helpers.arrayElement(Object.values(UserRole)),
+      })),
+    );
+
+    return await this.RegisterRepo.save(registers);
   }
 
   async seedReturns(

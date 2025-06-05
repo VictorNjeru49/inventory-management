@@ -12,7 +12,8 @@ import {
 } from '@nestjs/common';
 import { PricingService } from './pricing.service';
 import { CreatePricingDto, UpdatePricingDto } from './dto';
-
+import { ApiBearerAuth } from '@nestjs/swagger';
+@ApiBearerAuth('AccessToken')
 @Controller('pricing')
 export class PricingController {
   constructor(private readonly pricingService: PricingService) {}

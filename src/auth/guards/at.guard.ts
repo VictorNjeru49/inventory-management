@@ -3,12 +3,6 @@ import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 
-/*
-- Purpose: Protects routes from unauthorized access
-- How it works: Intercepts requests and uses the access token strategy to validate before allowing the request to proceed
-- Applied globally to all routes by default
-*/
-
 @Injectable()
 export class AtGuard extends AuthGuard('jwt-at') {
   constructor(private reflector: Reflector) {

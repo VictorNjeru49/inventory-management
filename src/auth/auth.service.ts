@@ -47,11 +47,8 @@ export class AuthService {
     return await Bcrypt.hash(data, salt);
   }
 
-  // Helper method to remove password from profile
   private async saveRefreshToken(userId: number, refreshToken: string) {
-    // hash refresh token
     const hashedRefreshToken = await this.hashData(refreshToken);
-    // save hashed refresh token in the database
     await this.userRepository.update(userId, {
       hashedRefreshToken: hashedRefreshToken,
     });
@@ -100,18 +97,19 @@ export class AuthService {
   async refreshTokens(id: number, refreshToken: string) {
     const foundUser = await this.userRepository.findOne({
       where: { id },
-      select: ['id', 'email', 'password'],
+      select: ['id', 'email', 'hashedRefreshToken'],
     });
 
     if (!foundUser) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-    if (!foundUser.password) {
+
+    if (!foundUser.hashedRefreshToken) {
       throw new NotFoundException('No refresh token stored for this user');
     }
     const isRefreshedToken = await Bcrypt.compare(
       refreshToken,
-      foundUser.password,
+      foundUser.hashedRefreshToken,
     );
 
     if (!isRefreshedToken) {
@@ -122,6 +120,7 @@ export class AuthService {
       foundUser.id,
       foundUser.email,
     );
+    await this.saveRefreshToken(foundUser.id, newRefreshToken);
     return { accessToken, refreshToken: newRefreshToken };
   }
 }

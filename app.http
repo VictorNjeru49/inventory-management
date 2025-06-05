@@ -1,15 +1,15 @@
 @url = http://localhost:8000
-@RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmOTdiODZiNy02YTM1LTQ0MzItYWJjZS03MGQ4NDFlZjkyNTkiLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJpYXQiOjE3NDkwNTkzNTIsImV4cCI6MTc0OTY2NDE1Mn0.24vTRb1VAU_FKLzrchhxqh2F4nlNDr-MkEmlG3jpIFI
-@AccessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmOTdiODZiNy02YTM1LTQ0MzItYWJjZS03MGQ4NDFlZjkyNTkiLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJpYXQiOjE3NDkwNTkzNTIsImV4cCI6MTc0OTA2MDI1Mn0.ZCvdKwERt40ej12p6bVkdfwbX1ZPPFqL98EGN3gbNmE
-
-####
+@AccessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiTWFyaWx5bmUuTGVta2U3NkBnbWFpbC5jb20iLCJpYXQiOjE3NDkxMjk2ODksImV4cCI6MTc0OTEzMDU4OX0.8xhxuzJl0E0-G1oa0ET5OcOyTNJUUeOhGdhPEoiDLEg
+@RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiTWFyaWx5bmUuTGVta2U3NkBnbWFpbC5jb20iLCJpYXQiOjE3NDkxMjk2ODksImV4cCI6MTc0OTczNDQ4OX0.6AbRFDszpT0rA6X2TKxxSjsWQJrdVJRNPsJSKYH6QLk
+#### 
 POST {{url}}/auth/signin
 Content-Type: application/json
 
 {
-  "email": "john@example.com",
+  "email": "Marilyne.Lemke76@gmail.com",
   "password": "password"
 }
+
 ###
 POST {{url}}/users
 Content-Type: application/json
@@ -19,127 +19,38 @@ Content-Type: application/json
   "lastName": "Doe",
   "email": "john@example.com",
   "password": "password",
-  "role": "user"
+  "role": "admin"
 }
 
 ###
 # Users
 GET {{url}}/users
 Authorization: Bearer {{AccessToken}}
+###
+GET {{url}}/auth/refresh?id=1
+Authorization: Bearer {{RefreshToken}}
+
+###
+GET {{url}}/auth/signout/1
 
 ###
 POST {{url}}/seed
-###
-GET {{url}}/users/?search=John
 
-###
-POST {{url}}/register
-Content-Type: application/json
 
-{
-    "firstName": "john",
-    "lastName": "doe",
-    "email": "johndoe@gmail.com",
-    "password": "1234567890",
-    "role": "admin"
-}
-
-###
-GET {{url}}/users/{id}
-
-###
-PATCH {{url}}/users/{id}
-Content-Type: application/json
-
-{
-    "firstName": "John",
-    "lastName": "Doe",
-    "role": "user"
-}
 
 ###
 DELETE {{url}}/users/2
+Authorization: Bearer {{AccessToken}}
 
 ###
 # Products
 GET {{url}}/products
+Authorization: Bearer {{AccessToken}}
 
-###
-GET {{url}}/products/5
 
-###
-POST {{url}}/products
-Content-Type: application/json
+GET {{url}}/warehouses
+Authorization: Bearer {{AccessToken}}
 
-{
-    "name": "Product A",
-    "description": "Description of Product A",
-    "price": 29.99,
-    "stock": 100
-}
 
-###
-PATCH {{url}}/products/5
-Content-Type: application/json
-
-{
-    "price": 24.99,
-    "stock": 90
-}
-
-###
-DELETE {{url}}/products/3
-
-###
-# Orders
 GET {{url}}/orders
-
-###
-GET {{url}}/orders/2
-
-###
-POST {{url}}/orders
-Content-Type: application/json
-
-{
-    "userId": 1,
-    "totalPrice": 49.98
-}
-
-###
-PATCH {{url}}/orders/3
-Content-Type: application/json
-
-{
-    "status": "shipped"
-}
-
-###
-DELETE {{url}}/orders/4
-
-###
-# Inventory
-GET {{url}}/inventory
-
-###
-GET {{url}}/inventory/3
-
-###
-POST {{url}}/inventory
-Content-Type: application/json
-
-{
-    "productId": 1,
-    "quantity": 50
-}
-
-###
-PATCH {{url}}/inventory/2
-Content-Type: application/json
-
-{
-    "quantity": 45
-}
-
-###
-DELETE {{url}}/inventory/5
+Authorization: Bearer {{AccessToken}}

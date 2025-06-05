@@ -9,12 +9,15 @@ import {
 } from '@nestjs/common';
 import { RegisterService } from './register.service';
 import { CreateRegisterDto, UpdateRegisterDto } from './dto';
-
+import { Public } from 'src/auth/decoractors/public.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
+@ApiBearerAuth('AccessToken')
 @Controller('register')
 export class RegisterController {
   constructor(private readonly registerService: RegisterService) {}
 
   @Post()
+  @Public()
   create(@Body() createRegisterDto: CreateRegisterDto) {
     return this.registerService.create(createRegisterDto);
   }
