@@ -16,20 +16,20 @@ export class ProductsService {
     return this.productsRepo.save(user);
   }
 
-  async findAll(search?: string): Promise<Product[]> {
-    if (search) {
-      return this.productsRepo.find({
-        where: [{ name: search }, { description: search }],
-        relations: [
-          'category',
-          'supplier',
-          'orderItems',
-          'warehouse',
-          'inventory',
-          'returns',
-        ],
-      });
-    }
+  async findAll(): Promise<Product[]> {
+    // if (search) {
+    //   return this.productsRepo.find({
+    //     where: [{ name: search }, { description: search }],
+    //     relations: [
+    //       'category',
+    //       'supplier',
+    //       'orderItems',
+    //       'warehouse',
+    //       'inventory',
+    //       'returns',
+    //     ],
+    //   });
+    // }
     return this.productsRepo.find({
       relations: [
         'category',

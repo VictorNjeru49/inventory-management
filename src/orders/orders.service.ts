@@ -17,19 +17,19 @@ export class OrdersService {
     return this.orderRepo.save(order);
   }
 
-  async findAll(search?: number): Promise<Order[]> {
-    if (search) {
-      return this.orderRepo.find({
-        where: [{ totalPrice: search, userId: search }],
-        relations: [
-          'user',
-          'orderItems',
-          'shippings',
-          'returns',
-          'transactions',
-        ],
-      });
-    }
+  async findAll(): Promise<Order[]> {
+    // if (search) {
+    //   return this.orderRepo.find({
+    //     where: [{ totalPrice: search, userId: search }],
+    //     relations: [
+    //       'user',
+    //       'orderItems',
+    //       'shippings',
+    //       'returns',
+    //       'transactions',
+    //     ],
+    //   });
+    // }
     return this.orderRepo.find({
       relations: ['user', 'orderItems', 'shippings', 'returns', 'transactions'],
     });

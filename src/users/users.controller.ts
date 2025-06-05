@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  Query,
   ParseIntPipe,
   ValidationPipe,
 } from '@nestjs/common';
@@ -25,8 +24,8 @@ export class UsersController {
   }
 
   @Get()
-  findAll(@Query('search') search?: string) {
-    return this.usersService.findAll(search);
+  findAll() {
+    return this.usersService.findAll();
   }
 
   @Get(':id')

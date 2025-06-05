@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   ValidationPipe,
-  Query,
   ParseIntPipe,
 } from '@nestjs/common';
 import { ReturnsService } from './returns.service';
@@ -23,8 +22,8 @@ export class ReturnsController {
   }
 
   @Get()
-  findAll(@Query('search') search?: number) {
-    return this.returnsService.findAll(search);
+  findAll() {
+    return this.returnsService.findAll();
   }
 
   @Get(':id')

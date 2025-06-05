@@ -8,10 +8,10 @@ export class InventoryService {
     return createInventoryDto;
   }
 
-  findAll(search?: string) {
-    if (search) {
-      return `${search}`;
-    }
+  findAll() {
+    // if (search) {
+    //   return `${search}`;
+    // }
     return `This action returns all inventory`;
   }
 

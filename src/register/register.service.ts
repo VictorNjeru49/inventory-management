@@ -33,7 +33,6 @@ export class RegisterService {
         user: savedUser,
       });
 
-      // Save the register entry
       return await this.registerRepository.save(newRegister);
     } catch (error) {
       console.error('Error during registration process:', error);
@@ -41,15 +40,14 @@ export class RegisterService {
     }
   }
 
-  findAll(search?: string) {
-    if (search) {
-      console.log(`This action returns all users matching the search term`);
-      return this.registerRepository.find({
-        where: [{ email: search }],
-      });
-    }
+  findAll() {
+    // if (search) {
+    //   console.log(`This action returns all users matching the search term`);
+    //   return this.registerRepository.find({
+    //     where: [{ email: search }],
+    //   });
+    // }
     return this.registerRepository.find({
-      where: [{ email: search }],
       relations: ['user'],
     });
   }

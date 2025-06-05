@@ -18,13 +18,13 @@ export class TransactionsService {
     return this.transactionRepo.save(transaction);
   }
 
-  async findAll(search?: number): Promise<Transaction[]> {
-    if (search) {
-      return this.transactionRepo.find({
-        where: [{ quantity: search }, { userId: search }, { orderId: search }],
-        relations: ['orders', 'user', 'payments'],
-      });
-    }
+  async findAll(): Promise<Transaction[]> {
+    // if (search) {
+    //   return this.transactionRepo.find({
+    //     where: [{ quantity: search }, { userId: search }, { orderId: search }],
+    //     relations: ['orders', 'user', 'payments'],
+    //   });
+    // }
     return this.transactionRepo.find({
       relations: ['orders', 'user', 'payments'],
     });

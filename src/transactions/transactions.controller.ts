@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  Query,
   ParseIntPipe,
   ValidationPipe,
 } from '@nestjs/common';
@@ -25,8 +24,8 @@ export class TransactionsController {
   }
 
   @Get()
-  findAll(@Query('search') search?: number) {
-    return this.transactionsService.findAll(search);
+  findAll() {
+    return this.transactionsService.findAll();
   }
 
   @Get(':id')

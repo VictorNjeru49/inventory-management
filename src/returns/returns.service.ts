@@ -15,17 +15,17 @@ export class ReturnsService {
     return this.returnRepo.save(returnee);
   }
 
-  async findAll(search?: number): Promise<Return[]> {
-    if (search) {
-      return this.returnRepo.find({
-        where: [
-          { quantity: search },
-          { productId: search },
-          { userId: search },
-        ],
-        relations: ['orders', 'user', 'product'],
-      });
-    }
+  async findAll(): Promise<Return[]> {
+    // if (search) {
+    //   return this.returnRepo.find({
+    //     where: [
+    //       { quantity: search },
+    //       { productId: search },
+    //       { userId: search },
+    //     ],
+    //     relations: ['orders', 'user', 'product'],
+    //   });
+    // }
     return this.returnRepo.find({
       relations: ['orders', 'user', 'product'],
     });

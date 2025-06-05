@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   ValidationPipe,
-  Query,
   ParseIntPipe,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
@@ -23,8 +22,8 @@ export class CategoriesController {
   }
 
   @Get()
-  findAll(@Query('search') search: string) {
-    return this.categoriesService.findAll(search);
+  findAll() {
+    return this.categoriesService.findAll();
   }
 
   @Get(':id')

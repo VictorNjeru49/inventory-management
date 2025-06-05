@@ -8,7 +8,6 @@ import {
   Delete,
   ValidationPipe,
   ParseIntPipe,
-  Query,
 } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
 import { CreateInventoryDto, UpdateInventoryDto } from './dto';
@@ -23,8 +22,8 @@ export class InventoryController {
   }
 
   @Get()
-  findAll(@Query('search') search?: string) {
-    return this.inventoryService.findAll(search);
+  findAll() {
+    return this.inventoryService.findAll();
   }
 
   @Get(':id')

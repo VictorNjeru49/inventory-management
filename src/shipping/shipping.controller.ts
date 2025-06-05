@@ -8,7 +8,6 @@ import {
   Delete,
   ValidationPipe,
   ParseIntPipe,
-  Query,
 } from '@nestjs/common';
 import { ShippingService } from './shipping.service';
 import { CreateShippingDto, UpdateShippingDto } from './dto';
@@ -23,8 +22,8 @@ export class ShippingController {
   }
 
   @Get()
-  findAll(@Query('search') search?: string) {
-    return this.shippingService.findAll(search);
+  findAll() {
+    return this.shippingService.findAll();
   }
 
   @Get(':id')

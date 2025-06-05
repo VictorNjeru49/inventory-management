@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  Query,
   ParseIntPipe,
   ValidationPipe,
 } from '@nestjs/common';
@@ -23,8 +22,8 @@ export class SuppliersController {
   }
 
   @Get()
-  findAll(@Query('search') search?: string) {
-    return this.suppliersService.findAll(search);
+  findAll() {
+    return this.suppliersService.findAll();
   }
 
   @Get(':id')

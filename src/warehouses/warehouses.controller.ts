@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  Query,
   ValidationPipe,
   ParseIntPipe,
 } from '@nestjs/common';
@@ -23,8 +22,8 @@ export class WarehousesController {
   }
 
   @Get()
-  findAll(@Query('search') search?: string) {
-    return this.warehousesService.findAll(search);
+  findAll() {
+    return this.warehousesService.findAll();
   }
 
   @Get(':id')

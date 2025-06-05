@@ -8,7 +8,6 @@ import {
   Delete,
   ValidationPipe,
   ParseIntPipe,
-  Query,
 } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { CreatePaymentDto, UpdatePaymentDto } from './dto';
@@ -23,8 +22,8 @@ export class PaymentsController {
   }
 
   @Get()
-  findAll(@Query('search') search?: number) {
-    return this.paymentsService.findAll(search);
+  findAll() {
+    return this.paymentsService.findAll();
   }
 
   @Get(':id')

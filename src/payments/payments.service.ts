@@ -17,16 +17,16 @@ export class PaymentsService {
     return this.paymentRepo.save(payment);
   }
 
-  async findAll(search?: number): Promise<Payment[]> {
-    if (search) {
-      return this.paymentRepo.find({
-        where: {
-          amount: search,
-          transactionId: search,
-        },
-        relations: ['transaction'],
-      });
-    }
+  async findAll(): Promise<Payment[]> {
+    // if (search) {
+    //   return this.paymentRepo.find({
+    //     where: {
+    //       amount: search,
+    //       transactionId: search,
+    //     },
+    //     relations: ['transaction'],
+    //   });
+    // }
     return this.paymentRepo.find({
       relations: ['transaction'],
     });
