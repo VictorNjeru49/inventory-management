@@ -15,10 +15,10 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  private async getTokens(userId: number, email: string) {
+  private async getTokens(userId: number, email: string, role: string) {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
-        { sub: userId, email },
+        { sub: userId, email: email, role: role },
         {
           secret: this.configService.getOrThrow<string>('ACCESS_TOKEN_SECRET'),
           expiresIn: this.configService.getOrThrow<string>(
@@ -30,6 +30,7 @@ export class AuthService {
         {
           sub: userId,
           email: email,
+          role: role,
         },
         {
           secret: this.configService.getOrThrow<string>('REFRESH_TOKEN_SECRET'),
@@ -57,7 +58,7 @@ export class AuthService {
   async SignIn(createAuthDto: CreateAuthDto) {
     const foundUser = await this.userRepository.findOne({
       where: { email: createAuthDto.email },
-      select: ['id', 'email', 'password'],
+      select: ['id', 'email', 'password', 'role'],
     });
     if (!foundUser) {
       throw new Error(`User with email ${createAuthDto.email} not found`);
@@ -73,6 +74,7 @@ export class AuthService {
     const { accessToken, refreshToken } = await this.getTokens(
       foundUser.id,
       foundUser.email,
+      foundUser.role,
     );
     await this.saveRefreshToken(foundUser.id, refreshToken);
     return { accessToken, refreshToken };
@@ -81,7 +83,7 @@ export class AuthService {
   async signOut(userId: number) {
     const res = await this.userRepository.findOne({
       where: { id: userId },
-      select: ['id', 'email', 'password'],
+      select: ['id', 'email', 'password', 'role'],
     });
 
     if (!res) {
@@ -119,6 +121,7 @@ export class AuthService {
     const { accessToken, refreshToken: newRefreshToken } = await this.getTokens(
       foundUser.id,
       foundUser.email,
+      foundUser.role,
     );
     await this.saveRefreshToken(foundUser.id, newRefreshToken);
     return { accessToken, refreshToken: newRefreshToken };

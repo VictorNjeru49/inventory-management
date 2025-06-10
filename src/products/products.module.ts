@@ -9,6 +9,7 @@ import { Category } from '../categories/entities/category.entity';
 import { OrderItem } from '../order-items/entities/order-item.entity';
 import { Supplier } from '../suppliers/entities/supplier.entity';
 import { Warehouse } from '../warehouses/entities/warehouse.entity';
+import { RoleGuard } from 'src/auth/guards/role.guard';
 
 @Module({
   imports: [
@@ -23,6 +24,6 @@ import { Warehouse } from '../warehouses/entities/warehouse.entity';
     ]),
   ],
   controllers: [ProductsController],
-  providers: [ProductsService],
+  providers: [ProductsService, RoleGuard],
 })
 export class ProductsModule {}

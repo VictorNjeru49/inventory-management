@@ -8,12 +8,18 @@ import {
   Delete,
   ValidationPipe,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ShippingService } from './shipping.service';
 import { CreateShippingDto, UpdateShippingDto } from './dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AtGuard } from 'src/auth/guards';
+import { RoleGuard } from 'src/auth/guards/role.guard';
+
+@ApiTags('Shipping')
 @ApiBearerAuth('AccessToken')
 @Controller('shipping')
+@UseGuards(AtGuard, RoleGuard)
 export class ShippingController {
   constructor(private readonly shippingService: ShippingService) {}
 

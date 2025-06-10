@@ -26,8 +26,8 @@ import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { AtGuard } from './auth/guards';
 import { APP_GUARD } from '@nestjs/core';
 import { Keyv, createKeyv } from '@keyv/redis';
-// import { LogsModule } from './logs/logs.module';
 import { CacheableMemory } from 'cacheable';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -51,7 +51,6 @@ import { CacheableMemory } from 'cacheable';
     DatabaseModule,
     OrderItemsModule,
     SeedModule,
-    // LogsModule,
     RegisterModule,
     AuthModule,
     CacheModule.registerAsync({
@@ -70,6 +69,17 @@ import { CacheableMemory } from 'cacheable';
         };
       },
     }),
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigService],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => [
+        {
+          ttl: config.getOrThrow<number>('THROTTLE_TTL'),
+          limit: config.getOrThrow<number>('THROTTLE_LIMIT'),
+          ignoreUserAgents: [/^curl\//, /^PostmanRuntime\//],
+        },
+      ],
+    }),
   ],
   controllers: [AppController],
   providers: [
@@ -82,6 +92,10 @@ import { CacheableMemory } from 'cacheable';
     {
       provide: APP_GUARD,
       useClass: AtGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })

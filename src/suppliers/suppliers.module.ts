@@ -5,10 +5,11 @@ import { DatabaseModule } from '../database/database.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Supplier } from './entities/supplier.entity';
 import { Product } from '../products/entities/product.entity';
+import { RoleGuard } from 'src/auth/guards/role.guard';
 
 @Module({
   imports: [DatabaseModule, TypeOrmModule.forFeature([Supplier, Product])],
   controllers: [SuppliersController],
-  providers: [SuppliersService],
+  providers: [SuppliersService, RoleGuard],
 })
 export class SuppliersModule {}

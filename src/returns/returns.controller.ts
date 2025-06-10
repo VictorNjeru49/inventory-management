@@ -8,12 +8,18 @@ import {
   Delete,
   ValidationPipe,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ReturnsService } from './returns.service';
 import { CreateReturnDto, UpdateReturnDto } from './dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AtGuard } from 'src/auth/guards';
+import { RoleGuard } from 'src/auth/guards/role.guard';
+
+@ApiTags('Returnee')
 @ApiBearerAuth('AccessToken')
 @Controller('returns')
+@UseGuards(AtGuard, RoleGuard)
 export class ReturnsController {
   constructor(private readonly returnsService: ReturnsService) {}
 

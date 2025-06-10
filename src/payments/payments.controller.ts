@@ -8,13 +8,19 @@ import {
   Delete,
   ValidationPipe,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { CreatePaymentDto, UpdatePaymentDto } from './dto';
 import { Public } from 'src/auth/decoractors/public.decorator';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AtGuard } from 'src/auth/guards';
+import { RoleGuard } from 'src/auth/guards/role.guard';
+
+@ApiTags('Payments')
 @ApiBearerAuth('AccessToken')
 @Controller('payments')
+@UseGuards(AtGuard, RoleGuard)
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
   @Public()

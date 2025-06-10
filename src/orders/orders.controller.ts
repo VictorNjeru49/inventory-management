@@ -8,13 +8,19 @@ import {
   Delete,
   ParseIntPipe,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto, UpdateOrderDto } from './dto';
 import { Public } from 'src/auth/decoractors/public.decorator';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AtGuard } from 'src/auth/guards';
+import { RoleGuard } from 'src/auth/guards/role.guard';
+
+@ApiTags('Orders')
 @ApiBearerAuth('AccessToken')
 @Controller('orders')
+@UseGuards(AtGuard, RoleGuard)
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
   @Public()

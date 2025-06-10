@@ -8,12 +8,18 @@ import {
   Delete,
   ParseIntPipe,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { SuppliersService } from './suppliers.service';
 import { CreateSupplierDto, UpdateSupplierDto } from './dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AtGuard } from 'src/auth/guards';
+import { RoleGuard } from 'src/auth/guards/role.guard';
+
+@ApiTags('Suppliers')
 @ApiBearerAuth('AccessToken')
 @Controller('suppliers')
+@UseGuards(AtGuard, RoleGuard)
 export class SuppliersController {
   constructor(private readonly suppliersService: SuppliersService) {}
 

@@ -7,6 +7,7 @@ import { Transaction } from './entities/transaction.entity';
 import { Payment } from '../payments/entities/payment.entity';
 import { Order } from '../orders/entities/order.entity';
 import { User } from '../users/entities/user.entity';
+import { RoleGuard } from 'src/auth/guards/role.guard';
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { User } from '../users/entities/user.entity';
     TypeOrmModule.forFeature([Transaction, Payment, Order, User]),
   ],
   controllers: [TransactionsController],
-  providers: [TransactionsService],
+  providers: [TransactionsService, RoleGuard],
 })
 export class TransactionsModule {}

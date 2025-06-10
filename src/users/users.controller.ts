@@ -8,33 +8,65 @@ import {
   Delete,
   ParseIntPipe,
   ValidationPipe,
+  Request,
+  ForbiddenException,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { Public } from 'src/auth/decoractors/public.decorator';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { Roles } from 'src/auth/decoractors/role.decorator';
+import { UserRole } from './entities/user.entity';
+import { ExemptionFilter } from './guard/filter.guard';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { AtGuard } from 'src/auth/guards';
+import { RoleGuard } from 'src/auth/guards/role.guard';
 
+@ApiTags('Users')
 @ApiBearerAuth('AccessToken')
 @Controller('users')
+@UseGuards(AtGuard, RoleGuard)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly exemptionFilter: ExemptionFilter,
+  ) {}
 
   @Post()
   @Public()
   create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
-
+  @ApiQuery({
+    name: 'search',
+    required: false,
+  })
+  @Roles(UserRole.ADMIN, UserRole.MANAGER)
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(search?: string) {
+    return this.usersService.findAll(search);
   }
 
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.USER)
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @Request() req: { user: { id: number; role: UserRole } },
+  ): Promise<any> {
+    const requesterId = req.user.id;
+    const userRole = req.user.role;
+    const hasAccess = await this.exemptionFilter.exceptionFilter(
+      id,
+      requesterId,
+      userRole,
+    );
+    if (!hasAccess) {
+      throw new ForbiddenException('Access denied');
+    }
     return this.usersService.findOne(id);
   }
 
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.USER)
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe)
@@ -44,6 +76,7 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.USER)
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.remove(id);

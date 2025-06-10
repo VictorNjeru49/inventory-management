@@ -8,13 +8,19 @@ import {
   Delete,
   ValidationPipe,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
 import { CreateInventoryDto, UpdateInventoryDto } from './dto';
 import { Public } from 'src/auth/decoractors/public.decorator';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AtGuard } from 'src/auth/guards';
+import { RoleGuard } from 'src/auth/guards/role.guard';
+
+@ApiTags('Inventory')
 @ApiBearerAuth('AccessToken')
 @Controller('inventory')
+@UseGuards(AtGuard, RoleGuard)
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
   @Public()

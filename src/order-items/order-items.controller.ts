@@ -7,13 +7,19 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { OrderItemsService } from './order-items.service';
 import { CreateOrderItemDto, UpdateOrderItemDto } from './dto';
 import { Public } from 'src/auth/decoractors/public.decorator';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AtGuard } from 'src/auth/guards';
+import { RoleGuard } from 'src/auth/guards/role.guard';
+
+@ApiTags('Order Items')
 @ApiBearerAuth('AccessToken')
 @Controller('order-items')
+@UseGuards(AtGuard, RoleGuard)
 export class OrderItemsController {
   constructor(private readonly orderItemsService: OrderItemsService) {}
   @Public()

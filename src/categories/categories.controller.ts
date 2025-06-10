@@ -8,13 +8,19 @@ import {
   Delete,
   ValidationPipe,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto, UpdateCategoryDto } from './dto';
 import { Public } from 'src/auth/decoractors/public.decorator';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AtGuard } from 'src/auth/guards';
+import { RoleGuard } from 'src/auth/guards/role.guard';
+
+@ApiTags('Categories')
 @ApiBearerAuth('AccessToken')
 @Controller('categories')
+@UseGuards(AtGuard, RoleGuard)
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
