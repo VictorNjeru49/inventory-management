@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -58,16 +62,21 @@ export class AuthService {
   async SignIn(createAuthDto: CreateAuthDto) {
     const foundUser = await this.userRepository.findOne({
       where: { email: createAuthDto.email },
-      select: ['id', 'email', 'password', 'role'],
+      select: ['id', 'email', 'password', 'role', 'hashedRefreshToken'],
     });
+
     if (!foundUser) {
-      throw new Error(`User with email ${createAuthDto.email} not found`);
+      throw new NotFoundException(
+        `User with email ${createAuthDto.email} not found`,
+      );
     }
-    const foundPassword = await Bcrypt.compare(
+
+    const isPasswordValid = await Bcrypt.compare(
       createAuthDto.password,
       foundUser.password,
     );
-    if (!foundPassword) {
+
+    if (!isPasswordValid) {
       throw new NotFoundException(`Invalid credentials`);
     }
 
@@ -76,6 +85,7 @@ export class AuthService {
       foundUser.email,
       foundUser.role,
     );
+
     await this.saveRefreshToken(foundUser.id, refreshToken);
     return { accessToken, refreshToken };
   }
@@ -109,13 +119,14 @@ export class AuthService {
     if (!foundUser.hashedRefreshToken) {
       throw new NotFoundException('No refresh token stored for this user');
     }
-    const isRefreshedToken = await Bcrypt.compare(
+
+    const isValidRefreshToken = await Bcrypt.compare(
       refreshToken,
       foundUser.hashedRefreshToken,
     );
 
-    if (!isRefreshedToken) {
-      throw new NotFoundException('Invalid refresh token');
+    if (!isValidRefreshToken) {
+      throw new UnauthorizedException('Invalid refresh token');
     }
 
     const { accessToken, refreshToken: newRefreshToken } = await this.getTokens(
@@ -123,7 +134,10 @@ export class AuthService {
       foundUser.email,
       foundUser.role,
     );
-    await this.saveRefreshToken(foundUser.id, newRefreshToken);
+
+    const hashedRefreshToken = await Bcrypt.hash(newRefreshToken, 10);
+    await this.saveRefreshToken(foundUser.id, hashedRefreshToken);
+
     return { accessToken, refreshToken: newRefreshToken };
   }
 }

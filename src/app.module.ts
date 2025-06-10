@@ -70,7 +70,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
       },
     }),
     ThrottlerModule.forRootAsync({
-      imports: [ConfigService],
+      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => [
         {

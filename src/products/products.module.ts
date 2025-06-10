@@ -10,6 +10,7 @@ import { OrderItem } from '../order-items/entities/order-item.entity';
 import { Supplier } from '../suppliers/entities/supplier.entity';
 import { Warehouse } from '../warehouses/entities/warehouse.entity';
 import { RoleGuard } from 'src/auth/guards/role.guard';
+import { User } from 'src/users/entities/user.entity';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { RoleGuard } from 'src/auth/guards/role.guard';
       OrderItem,
       Supplier,
       Warehouse,
+      User,
     ]),
   ],
   controllers: [ProductsController],

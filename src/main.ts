@@ -36,9 +36,9 @@ async function bootstrap() {
     .addTag('Shipping', 'Shipping Management Endpoints')
     .addTag('Register', 'User Registration Endpoints')
     .addTag('Auth', 'Auth Endpoints')
-    .addServer(`http://localhost:8000/api`, 'Local Development Server')
+    .addServer(`http://localhost:8000`, 'Local Development Server')
     .addServer(
-      `https://inventory-management-kx6n.onrender.com/api`,
+      `https://inventory-management-kx6n.onrender.com`,
       'Production Server',
     )
     .addBearerAuth(

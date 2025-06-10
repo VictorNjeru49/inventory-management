@@ -12,7 +12,7 @@ describe('UsersController', () => {
         UsersService,
         {
           provide: 'UserRepository',
-          useValue: {}, // Provide a mock implementation if needed
+          useValue: {},
         },
       ],
     }).compile();

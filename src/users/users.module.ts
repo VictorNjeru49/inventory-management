@@ -9,6 +9,7 @@ import { Transaction } from '../transactions/entities/transaction.entity';
 import { Return } from '../returns/entities/return.entity';
 import { Register } from '../register/entities/register.entity';
 import { RoleGuard } from 'src/auth/guards/role.guard';
+import { ExemptionFilter } from './guard/filter.guard';
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { RoleGuard } from 'src/auth/guards/role.guard';
     TypeOrmModule.forFeature([User, Order, Transaction, Return, Register]),
   ],
   controllers: [UsersController],
-  providers: [UsersService, RoleGuard],
+  providers: [UsersService, RoleGuard, ExemptionFilter],
 })
 export class UsersModule {}

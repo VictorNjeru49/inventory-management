@@ -1,6 +1,6 @@
-@url = http://localhost:8000
-@AccessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiTWFyaWx5bmUuTGVta2U3NkBnbWFpbC5jb20iLCJpYXQiOjE3NDkxNDM0MzUsImV4cCI6MTc0OTE0NDMzNX0.2oOQpXWOcAj5Nvy2zZ_tKgZc_KqJgjmj_aKvB3KFeKs
-@RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiTWFyaWx5bmUuTGVta2U3NkBnbWFpbC5jb20iLCJpYXQiOjE3NDkxNDM0MzUsImV4cCI6MTc0OTc0ODIzNX0.O_cqYPqrJS95BY_XnR1cziaqxXXNnI_j5U0zxWu0QlI
+@url = http://localhost:8000/api
+@AccessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiTWFyaWx5bmUuTGVta2U3NkBnbWFpbC5jb20iLCJpYXQiOjE3NDk1NTcyMzEsImV4cCI6MTc0OTU1ODEzMX0.ojz8g2SdppdW-uoW78RXbr45Wwv9qPprOlYIgFGDilw
+@RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiTWFyaWx5bmUuTGVta2U3NkBnbWFpbC5jb20iLCJpYXQiOjE3NDk1NTcyMzEsImV4cCI6MTc1MDE2MjAzMX0.YWoGO66cUCziV6FHs_eG_XgTQbjcYA-MsHCZTA6bHnc
 
 POST {{url}}/auth/signin
 Content-Type: application/json
@@ -24,8 +24,9 @@ Content-Type: application/json
 
 ###
 # Users
-GET {{url}}/users
+GET {{url}}/users?search=Hiram
 Authorization: Bearer {{AccessToken}}
+
 ###
 GET {{url}}/auth/refresh?id=1
 Authorization: Bearer {{RefreshToken}}

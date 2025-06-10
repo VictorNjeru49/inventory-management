@@ -11,6 +11,7 @@ import {
   Request,
   ForbiddenException,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
@@ -40,10 +41,11 @@ export class UsersController {
   @ApiQuery({
     name: 'search',
     required: false,
+    description: 'Filter profiles by search',
   })
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
   @Get()
-  findAll(search?: string) {
+  findAll(@Query('search') search?: string) {
     return this.usersService.findAll(search);
   }
 

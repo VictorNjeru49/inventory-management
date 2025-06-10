@@ -7,11 +7,12 @@ import { Inventory } from '../inventory/entities/inventory.entity';
 import { Product } from '../products/entities/product.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoleGuard } from 'src/auth/guards/role.guard';
+import { User } from 'src/users/entities/user.entity';
 
 @Module({
   imports: [
     DatabaseModule,
-    TypeOrmModule.forFeature([Warehouse, Inventory, Product]),
+    TypeOrmModule.forFeature([Warehouse, Inventory, Product, User]),
   ],
   controllers: [WarehousesController],
   providers: [WarehousesService, RoleGuard],
