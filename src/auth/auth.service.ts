@@ -11,7 +11,7 @@ import * as Bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { User } from '../users/entities/user.entity';
-import * as nodemailer from 'nodemailer';
+import nodemailer from 'nodemailer';
 
 export interface JwtPayload {
   sub: number;
