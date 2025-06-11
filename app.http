@@ -6,7 +6,7 @@ POST {{url}}/auth/signin
 Content-Type: application/json
 
 {
-  "email": "Marilyne.Lemke76@gmail.com",
+  "email": "Garland58@gmail.com",
   "password": "password"
 }
 
