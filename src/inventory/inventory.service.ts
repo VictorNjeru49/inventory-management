@@ -1,30 +1,57 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateInventoryDto, UpdateInventoryDto } from './dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Inventory } from './entities/inventory.entity'; // Assuming you have an Inventory entity defined
 
 @Injectable()
 export class InventoryService {
-  create(createInventoryDto: CreateInventoryDto) {
-    // Example: return the received DTO for now to use the parameter
-    return createInventoryDto;
+  constructor(
+    @InjectRepository(Inventory)
+    private inventoryRepo: Repository<Inventory>,
+  ) {}
+
+  async create(createInventoryDto: CreateInventoryDto): Promise<Inventory> {
+    const inventoryItem = this.inventoryRepo.create(createInventoryDto);
+    return this.inventoryRepo.save(inventoryItem);
   }
 
-  findAll() {
-    // if (search) {
-    //   return `${search}`;
-    // }
-    return `This action returns all inventory`;
+  async findAll(search?: number): Promise<Inventory[]> {
+    if (search) {
+      return this.inventoryRepo.find({
+        where: [{ stockQty: search }],
+        relations: ['product', 'warehouse'],
+      });
+    }
+    return this.inventoryRepo.find({
+      relations: ['product', 'warehouse'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} inventory`;
+  async findOne(id: number): Promise<Inventory> {
+    const inventoryItem = await this.inventoryRepo.findOneBy({ id });
+    if (!inventoryItem) {
+      throw new NotFoundException(`Inventory item with ID ${id} not found`);
+    }
+    return inventoryItem;
   }
 
-  update(id: number, updateInventoryDto: UpdateInventoryDto) {
-    // Example: return the id and the update DTO to use both parameters
-    return { id, updatedData: updateInventoryDto };
+  async update(
+    id: number,
+    updateInventoryDto: UpdateInventoryDto,
+  ): Promise<Inventory> {
+    await this.inventoryRepo.update(id, updateInventoryDto);
+    const updatedInventoryItem = await this.inventoryRepo.findOneBy({ id });
+    if (!updatedInventoryItem) {
+      throw new NotFoundException(`Inventory item with ID ${id} not found`);
+    }
+    return updatedInventoryItem;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} inventory`;
+  async remove(id: number): Promise<void> {
+    const result = await this.inventoryRepo.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Inventory item with ID ${id} not found`);
+    }
   }
 }

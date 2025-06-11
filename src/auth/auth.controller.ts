@@ -9,13 +9,15 @@ import {
   UseGuards,
   UnauthorizedException,
   Req,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
 import { Request } from 'express';
 import { Public } from './decoractors/public.decorator';
 import { AtGuard, RtGuard } from './guards';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ForgetPasswordDto, ResetPasswordDto, CreateAuthDto } from './dto';
 
 interface RequestWithUser extends Request {
   user: {
@@ -56,5 +58,23 @@ export class AuthController {
       throw new UnauthorizedException("userId doesn't match");
     }
     return this.authService.refreshTokens(id, user.refreshToken);
+  }
+  @Public()
+  @Post('forget-password')
+  @HttpCode(HttpStatus.OK)
+  async forgetPassword(
+    @Body() forgetPasswordDto: ForgetPasswordDto,
+  ): Promise<string | null> {
+    return await this.authService.forgetPassword(forgetPasswordDto.email);
+  }
+
+  @Public()
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  async resetPassword(
+    @Body() resetPasswordDto: ResetPasswordDto,
+  ): Promise<void> {
+    const { token, newPassword } = resetPasswordDto;
+    return await this.authService.resetPassword(token, newPassword);
   }
 }

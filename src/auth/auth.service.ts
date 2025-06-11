@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -10,7 +11,14 @@ import * as Bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { User } from '../users/entities/user.entity';
+import * as nodemailer from 'nodemailer';
 
+export interface JwtPayload {
+  sub: number;
+  email: string;
+  iat?: number;
+  exp?: number;
+}
 @Injectable()
 export class AuthService {
   constructor(
@@ -57,6 +65,58 @@ export class AuthService {
     await this.userRepository.update(userId, {
       hashedRefreshToken: hashedRefreshToken,
     });
+  }
+
+  async forgetPassword(email: string) {
+    const user = await this.userRepository.findOne({ where: { email } });
+
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+
+    const resetToken = await this.jwtService.signAsync(
+      { sub: user.id, email: user.email },
+      {
+        secret: this.configService.getOrThrow<string>('RESET_TOKEN_SECRET'),
+        expiresIn: this.configService.getOrThrow<string>(
+          'RESET_TOKEN_EXPIRES_IN',
+        ),
+      },
+    );
+
+    // await this.sendResetPasswordEmail(email, resetToken);
+    console.log(resetToken);
+    return resetToken;
+  }
+
+  private async sendResetPasswordEmail(
+    email: string,
+    token: string,
+  ): Promise<void> {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: this.configService.getOrThrow<string>('SMTP_USER'),
+        pass: this.configService.getOrThrow<string>('SMTP_PASS'),
+      },
+    });
+
+    const resetUrl = `${this.configService.getOrThrow<string>('FRONTEND_URL')}/reset-password?token=${token}`;
+    const htmlContent = `<p>To reset your password, please click the link below:</p>
+                         <a href="${resetUrl}">Reset Password</a>`;
+
+    try {
+      await transporter.sendMail({
+        from: `"Your App" <${this.configService.getOrThrow<string>('SMTP_USER')}>`,
+        to: email,
+        subject: 'Password Reset Request',
+        html: htmlContent,
+      });
+      console.log(`Reset password email sent to: ${email}`);
+    } catch (error) {
+      console.error('Error sending reset password email:', error);
+      throw new Error('Could not send reset password email.');
+    }
   }
 
   async SignIn(createAuthDto: CreateAuthDto) {
@@ -139,5 +199,30 @@ export class AuthService {
     await this.saveRefreshToken(foundUser.id, hashedRefreshToken);
 
     return { accessToken, refreshToken: newRefreshToken };
+  }
+
+  async resetPassword(token: string, newPassword: string): Promise<void> {
+    let payload: JwtPayload;
+    try {
+      payload = await this.jwtService.verifyAsync<JwtPayload>(token, {
+        secret: this.configService.getOrThrow<string>('RESET_TOKEN_SECRET'),
+      });
+    } catch {
+      throw new BadRequestException('Invalid or expired token');
+    }
+
+    const user = await this.userRepository.findOne({
+      where: { id: payload.sub },
+      select: ['id', 'email'],
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User not found`);
+    }
+
+    const hashedPassword = await Bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+
+    await this.userRepository.save(user);
   }
 }

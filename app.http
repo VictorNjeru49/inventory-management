@@ -1,6 +1,6 @@
 @url = http://localhost:8000/api
-@AccessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiTWFyaWx5bmUuTGVta2U3NkBnbWFpbC5jb20iLCJpYXQiOjE3NDk1NTcyMzEsImV4cCI6MTc0OTU1ODEzMX0.ojz8g2SdppdW-uoW78RXbr45Wwv9qPprOlYIgFGDilw
-@RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiTWFyaWx5bmUuTGVta2U3NkBnbWFpbC5jb20iLCJpYXQiOjE3NDk1NTcyMzEsImV4cCI6MTc1MDE2MjAzMX0.YWoGO66cUCziV6FHs_eG_XgTQbjcYA-MsHCZTA6bHnc
+@AccessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiTWFyaWx5bmUuTGVta2U3NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk1NzQzMDUsImV4cCI6MTc0OTU3NTIwNX0.p1AweZJzozhvkYVRHTsxpIRWvg9lhMZg-JQJlHBIyfM
+@RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiTWFyaWx5bmUuTGVta2U3NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk1NzI0MDQsImV4cCI6MTc1MDE3NzIwNH0.xWNGUAjsHTV_4d63iDK4w2Ay3j1koQNpt9S7D_j3S7k
 
 POST {{url}}/auth/signin
 Content-Type: application/json
@@ -15,16 +15,16 @@ POST {{url}}/users
 Content-Type: application/json
 
 {
-  "firstName": "John",
-  "lastName": "Doe",
-  "email": "john@example.com",
+  "firstName": "titus",
+  "lastName": "waititu",
+  "email": "andreastailas96@gmail.com",
   "password": "password",
   "role": "admin"
 }
 
 ###
 # Users
-GET {{url}}/users?search=Hiram
+GET {{url}}/users
 Authorization: Bearer {{AccessToken}}
 
 ###
@@ -47,11 +47,31 @@ Authorization: Bearer {{AccessToken}}
 # Products
 GET {{url}}/products
 Authorization: Bearer {{AccessToken}}
-
+###
 
 GET {{url}}/warehouses
 Authorization: Bearer {{AccessToken}}
-
+####
 
 GET {{url}}/orders
 Authorization: Bearer {{AccessToken}}
+
+###
+POST {{url}}/auth/forget-password
+Content-Type: application/json
+
+{
+  "email": "andreastailas96@gmail.com"
+}
+
+
+###
+@resetToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJpYXQiOjE3NDk1Nzg0MDIsImV4cCI6MTc0OTU4MjAwMn0.o-zguhuUWF0OtnJH72X4vxeaZYzNUX5pmgrlZ-UcW-g
+###
+POST {{url}}/auth/reset-password
+Content-Type: application/json
+
+{
+  "token": "{{resetToken}}",
+  "newPassword": "new_secure_password"
+}

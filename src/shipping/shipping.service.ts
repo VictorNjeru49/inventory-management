@@ -16,13 +16,13 @@ export class ShippingService {
     return this.shippingRepo.save(shipping);
   }
 
-  async findAll(): Promise<Shipping[]> {
-    // if (search) {
-    //   return this.shippingRepo.find({
-    //     where: [{ trackingNumber: search }],
-    //     relations: ['orders'],
-    //   });
-    // }
+  async findAll(search?: string): Promise<Shipping[]> {
+    if (search) {
+      return this.shippingRepo.find({
+        where: [{ trackingNumber: search }],
+        relations: ['orders'],
+      });
+    }
     return this.shippingRepo.find({
       relations: ['orders'],
     });

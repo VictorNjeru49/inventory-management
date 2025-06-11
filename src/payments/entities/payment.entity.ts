@@ -25,7 +25,7 @@ export enum PaymentMethod {
 
 @Entity()
 export class Payment {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })

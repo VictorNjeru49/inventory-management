@@ -22,7 +22,7 @@ export enum OrderStatus {
 
 @Entity()
 export class Order {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ nullable: false })

@@ -9,12 +9,13 @@ import {
   ValidationPipe,
   ParseIntPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { WarehousesService } from './warehouses.service';
 import { CreateWarehouseDto, UpdateWarehouseDto } from './dto';
 import { Roles } from 'src/auth/decoractors/role.decorator';
 import { UserRole } from 'src/users/entities/user.entity';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AtGuard } from 'src/auth/guards';
 import { RoleGuard } from 'src/auth/guards/role.guard';
 
@@ -30,10 +31,15 @@ export class WarehousesController {
     return this.warehousesService.create(createWarehouseDto);
   }
 
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Filter profiles by search',
+  })
   @Roles(UserRole.ADMIN)
   @Get()
-  findAll() {
-    return this.warehousesService.findAll();
+  findAll(@Query('search') search?: string) {
+    return this.warehousesService.findAll(search);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER)

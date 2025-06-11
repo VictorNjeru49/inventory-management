@@ -9,12 +9,15 @@ import {
   ParseIntPipe,
   ValidationPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto, UpdateTransactionDto } from './dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AtGuard } from 'src/auth/guards';
 import { RoleGuard } from 'src/auth/guards/role.guard';
+import { Roles } from 'src/auth/decoractors/role.decorator';
+import { UserRole } from 'src/users/entities/user.entity';
 
 @ApiTags('Transactions')
 @ApiBearerAuth('AccessToken')
@@ -30,16 +33,22 @@ export class TransactionsController {
     return this.transactionsService.create(createTransactionDto);
   }
 
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Filter profiles by search',
+  })
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.USER)
   @Get()
-  findAll() {
-    return this.transactionsService.findAll();
+  findAll(@Query('search') search?: number) {
+    return this.transactionsService.findAll(search);
   }
-
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.USER)
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.transactionsService.findOne(id);
   }
-
+  @Roles(UserRole.ADMIN, UserRole.MANAGER)
   @Patch(':id')
   update(
     @Param('id') id: number,
@@ -47,7 +56,7 @@ export class TransactionsController {
   ) {
     return this.transactionsService.update(id, updateTransactionDto);
   }
-
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.USER)
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.transactionsService.remove(id);

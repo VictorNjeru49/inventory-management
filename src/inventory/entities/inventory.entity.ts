@@ -10,7 +10,7 @@ import {
 
 @Entity()
 export class Inventory {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()

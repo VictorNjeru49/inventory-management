@@ -11,9 +11,11 @@ import {
 import { RegisterService } from './register.service';
 import { CreateRegisterDto, UpdateRegisterDto } from './dto';
 import { Public } from 'src/auth/decoractors/public.decorator';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AtGuard } from 'src/auth/guards';
 import { RoleGuard } from 'src/auth/guards/role.guard';
+import { Roles } from 'src/auth/decoractors/role.decorator';
+import { UserRole } from 'src/users/entities/user.entity';
 
 @ApiTags('Register')
 @ApiBearerAuth('AccessToken')
@@ -21,23 +23,27 @@ import { RoleGuard } from 'src/auth/guards/role.guard';
 @UseGuards(AtGuard, RoleGuard)
 export class RegisterController {
   constructor(private readonly registerService: RegisterService) {}
-
-  @Post()
   @Public()
+  @Post()
   create(@Body() createRegisterDto: CreateRegisterDto) {
     return this.registerService.create(createRegisterDto);
   }
-
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Filter profiles by search',
+  })
+  @Roles(UserRole.ADMIN, UserRole.MANAGER)
   @Get()
   findAll() {
     return this.registerService.findAll();
   }
-
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.USER)
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.registerService.findOne(id);
   }
-
+  @Roles(UserRole.ADMIN, UserRole.MANAGER)
   @Patch(':id')
   update(
     @Param('id') id: number,
@@ -45,7 +51,7 @@ export class RegisterController {
   ) {
     return this.registerService.update(id, updateRegisterDto);
   }
-
+  @Roles(UserRole.ADMIN, UserRole.MANAGER)
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.registerService.remove(id);

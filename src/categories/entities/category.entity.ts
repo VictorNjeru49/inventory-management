@@ -9,7 +9,7 @@ import {
 
 @Entity()
 export class Category {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()

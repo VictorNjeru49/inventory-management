@@ -11,7 +11,7 @@ import {
 
 @Entity()
 export class OrderItem {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: number;
   @Column({ nullable: false })
   orderId: number;

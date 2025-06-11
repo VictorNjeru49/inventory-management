@@ -41,13 +41,13 @@ export class RegisterService {
     }
   }
 
-  findAll() {
-    // if (search) {
-    //   console.log(`This action returns all users matching the search term`);
-    //   return this.registerRepository.find({
-    //     where: [{ email: search }],
-    //   });
-    // }
+  findAll(search?: string) {
+    if (search) {
+      console.log(`This action returns all users matching the search term`);
+      return this.registerRepository.find({
+        where: [{ email: search }],
+      });
+    }
     return this.registerRepository.find({
       relations: ['user'],
     });

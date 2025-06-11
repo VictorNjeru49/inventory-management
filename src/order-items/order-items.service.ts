@@ -17,7 +17,13 @@ export class OrderItemsService {
     return this.orderItemRepo.save(orderItem);
   }
 
-  async findAll(): Promise<OrderItem[]> {
+  async findAll(search?: number): Promise<OrderItem[]> {
+    if (search) {
+      return this.orderItemRepo.find({
+        where: [{ price: search, quantity: search }],
+        relations: ['order', 'product'],
+      });
+    }
     return this.orderItemRepo.find({
       relations: ['order', 'product'],
     });

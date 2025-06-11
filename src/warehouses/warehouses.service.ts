@@ -16,17 +16,17 @@ export class WarehousesService {
     return this.warehouse.save(warehouse);
   }
 
-  async findAll(): Promise<Warehouse[]> {
-    // if (search) {
-    //   return this.warehouse.find({
-    //     where: [
-    //       { name: search },
-    //       { location: search },
-    //       { description: search },
-    //     ],
-    //     relations: ['inventory', 'products'],
-    //   });
-    // }
+  async findAll(search?: string): Promise<Warehouse[]> {
+    if (search) {
+      return this.warehouse.find({
+        where: [
+          { name: search },
+          { location: search },
+          { description: search },
+        ],
+        relations: ['inventory', 'products'],
+      });
+    }
     return this.warehouse.find({
       relations: ['inventory', 'products'],
     });

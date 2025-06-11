@@ -11,8 +11,6 @@ import { WarehousesModule } from './warehouses/warehouses.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { ShippingModule } from './shipping/shipping.module';
 import { ReturnsModule } from './returns/returns.module';
-import { PricingModule } from './pricing/pricing.module';
-import { DiscountModule } from './discount/discount.module';
 import { PaymentsModule } from './payments/payments.module';
 import { DatabaseService } from './database/database.service';
 import { LoggerMiddleware } from './logger.middleware';
@@ -24,7 +22,7 @@ import { RegisterModule } from './register/register.module';
 import { AuthModule } from './auth/auth.module';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { AtGuard } from './auth/guards';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { Keyv, createKeyv } from '@keyv/redis';
 import { CacheableMemory } from 'cacheable';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
@@ -45,8 +43,6 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     InventoryModule,
     ShippingModule,
     ReturnsModule,
-    PricingModule,
-    DiscountModule,
     PaymentsModule,
     DatabaseModule,
     OrderItemsModule,
@@ -59,10 +55,10 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
       isGlobal: true,
       useFactory: (configService: ConfigService) => {
         return {
-          ttl: 90000,
+          ttl: 60000,
           store: [
             new Keyv({
-              store: new CacheableMemory({ ttl: 60000, lruSize: 5000 }),
+              store: new CacheableMemory({ ttl: 60000, lruSize: 10000 }),
             }),
             createKeyv(configService.getOrThrow<string>('REDIS_URL')),
           ],
@@ -86,7 +82,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     AppService,
     DatabaseService,
     {
-      provide: 'APP_INTERCEPTOR',
+      provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
     },
     {

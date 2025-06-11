@@ -64,10 +64,10 @@ export class SeedService {
     const inventories = await this.seedInventories(products, warehouses);
     const orders = await this.seedOrders(users);
     const orderItems = await this.seedOrderItems(orders, products);
-    const payments = await this.seedPayments(orders);
+    const transactions = await this.seedTransactions(orders);
+    const payments = await this.seedPayments(orders, transactions);
     const shippings = await this.seedShippings(orders);
     const returns = await this.seedReturns(orders, users, products);
-    const transactions = await this.seedTransactions(orders);
 
     return {
       users,
@@ -135,7 +135,7 @@ export class SeedService {
         price: parseFloat(faker.commerce.price()),
         category: categories[i % categories.length],
         supplier: suppliers[i % suppliers.length],
-        warehouse: warehouses[i % warehouses.length], // Ensure warehouseId is assigned
+        warehouse: warehouses[i % warehouses.length],
         sku: faker.number.int(10),
         stockQuantity: faker.number.int({ min: 1, max: 100 }),
       })),
@@ -206,12 +206,17 @@ export class SeedService {
     return await this.OrderItemRepo.save(orderItems);
   }
 
-  async seedPayments(orders: Order[], count = 10): Promise<Payment[]> {
+  async seedPayments(
+    orders: Order[],
+    transactions: Transaction[],
+    count = 10,
+  ): Promise<Payment[]> {
     if (!orders.length) return [];
 
     const payments = this.PaymentRepo.create(
       Array.from({ length: count }).map((_, i) => ({
         order: orders[i % orders.length],
+        transaction: transactions[i % transactions.length],
         amount: parseFloat(faker.commerce.price()),
         paymentMethod: faker.helpers.arrayElement(Object.values(PaymentMethod)),
       })),
@@ -257,10 +262,10 @@ export class SeedService {
 
     const returns = this.ReturnRepo.create(
       Array.from({ length: count }).map((_, i) => ({
-        quantity: faker.number.int({ min: 1, max: 5 }), // Random quantity for returns
-        order: orders[i % orders.length], // Ensure there's an order associated
-        user: users[i % users.length], // Assign a valid user
-        product: products[i % products.length], // Assign a valid product
+        quantity: faker.number.int({ min: 1, max: 5 }),
+        order: orders[i % orders.length],
+        user: users[i % users.length],
+        product: products[i % products.length],
         returnReason: faker.lorem.sentence(),
       })),
     );

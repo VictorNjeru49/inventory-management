@@ -20,7 +20,7 @@ export enum ReturnStatus {
 
 @Entity()
 export class Return {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()

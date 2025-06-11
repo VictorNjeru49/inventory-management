@@ -15,13 +15,13 @@ export class SuppliersService {
     return this.supplierRepo.save(supplier);
   }
 
-  async findAll(): Promise<Supplier[]> {
-    // if (search) {
-    //   return this.supplierRepo.find({
-    //     where: [{ name: search }, { contactInfo: search }, { address: search }],
-    //     relations: ['products'],
-    //   });
-    // }
+  async findAll(search?: string): Promise<Supplier[]> {
+    if (search) {
+      return this.supplierRepo.find({
+        where: [{ name: search }, { contactInfo: search }, { address: search }],
+        relations: ['products'],
+      });
+    }
     return this.supplierRepo.find({
       relations: ['products'],
     });

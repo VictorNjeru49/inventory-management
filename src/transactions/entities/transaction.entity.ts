@@ -20,7 +20,7 @@ export enum TransactionType {
 
 @Entity()
 export class Transaction {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
@@ -49,7 +49,7 @@ export class Transaction {
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
-  // New relationship to Payment
+
   @OneToMany(() => Payment, (payment) => payment.transaction)
   payments: Payment[];
 }

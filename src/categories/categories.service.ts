@@ -17,13 +17,13 @@ export class CategoriesService {
     return this.categoryRepo.save(category);
   }
 
-  async findAll(): Promise<Category[]> {
-    // if (search) {
-    //   return this.categoryRepo.find({
-    //     where: { name: search },
-    //     relations: ['products'],
-    //   });
-    // }
+  async findAll(search?: string): Promise<Category[]> {
+    if (search) {
+      return this.categoryRepo.find({
+        where: { name: search },
+        relations: ['products'],
+      });
+    }
     return this.categoryRepo.find({
       relations: ['products'],
     });
