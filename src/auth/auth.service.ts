@@ -85,8 +85,8 @@ export class AuthService {
     );
 
     await this.sendResetPasswordEmail(email, resetToken);
-    console.log(resetToken);
-    return resetToken;
+    console.log(`The reset access is: ${resetToken}`);
+    return `The reset access is: ${resetToken}`;
   }
 
   private async sendResetPasswordEmail(
