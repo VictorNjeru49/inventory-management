@@ -64,10 +64,11 @@ export class SeedService {
     const inventories = await this.seedInventories(products, warehouses);
     const orders = await this.seedOrders(users);
     const orderItems = await this.seedOrderItems(orders, products);
-    const transactions = await this.seedTransactions(orders);
+    const transactions = await this.seedTransactions(orders, users);
     const payments = await this.seedPayments(orders, transactions);
     const shippings = await this.seedShippings(orders);
     const returns = await this.seedReturns(orders, users, products);
+    const registers = await this.seedRegisters(users);
 
     return {
       users,
@@ -82,6 +83,7 @@ export class SeedService {
       shippings,
       returns,
       transactions,
+      registers,
     };
   }
 
@@ -243,9 +245,9 @@ export class SeedService {
 
     const registers = this.RegisterRepo.create(
       Array.from({ length: count }).map((_, i) => ({
-        userId: users[i % users.length].id,
         email: users[i % users.length].email,
         password: 'password',
+        user: users[i % users.length],
         role: faker.helpers.arrayElement(Object.values(UserRole)),
       })),
     );
@@ -274,13 +276,18 @@ export class SeedService {
     return await this.ReturnRepo.save(returns);
   }
 
-  async seedTransactions(orders: Order[], count = 10): Promise<Transaction[]> {
+  async seedTransactions(
+    orders: Order[],
+    user: User[],
+    count = 10,
+  ): Promise<Transaction[]> {
     if (!orders.length) return [];
 
     const transactions = this.TransactionRepo.create(
       Array.from({ length: count }).map((_, i) => ({
         order: orders[i % orders.length],
         quantity: faker.number.int({ min: 1, max: 5 }),
+        user: user[i % user.length],
         transaction_type: faker.helpers.arrayElement(
           Object.values(TransactionType),
         ),
