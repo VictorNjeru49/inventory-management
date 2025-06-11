@@ -3,23 +3,30 @@ import { UserRole } from '../entities/register.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateRegisterDto {
-  @ApiProperty()
+  @ApiProperty({ description: 'First name of the user', example: 'John' })
   @IsNotEmpty()
   @IsString()
   firstName: string;
-  @ApiProperty()
+
+  @ApiProperty({ description: 'Last name of the user', example: 'Doe' })
   @IsNotEmpty()
   @IsString()
   lastName: string;
-  @ApiProperty()
+
+  @ApiProperty({
+    description: 'User email address',
+    example: 'user@example.com',
+  })
   @IsNotEmpty()
   @IsEmail()
   email: string;
-  @ApiProperty()
+
+  @ApiProperty({ description: 'User password', example: 'securePassword123' })
   @IsNotEmpty()
   @IsString()
   password: string;
-  @ApiProperty()
+
+  @ApiProperty({ description: 'User role', example: 'USER' })
   @IsNotEmpty()
   @IsEnum(UserRole)
   role: UserRole;

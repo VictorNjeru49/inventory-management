@@ -2,10 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
 
 export class CreateOrderDto {
-  @ApiProperty({ description: 'users orders', example: '123456765432erfvft65' })
+  @ApiProperty({ description: 'User ID who made the order', example: 123 })
   @IsNumber()
   userId: number;
-  @ApiProperty({ description: 'total price', example: '234.88' })
+
+  @ApiProperty({ description: 'Total price of the order', example: 234.88 })
   @IsNumber()
   totalPrice: number;
 }

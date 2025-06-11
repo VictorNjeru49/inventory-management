@@ -2,13 +2,15 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDate } from 'class-validator';
 
 export class CreateCategoryDto {
-  @ApiProperty({ description: 'name of the category', example: 'waffes' })
+  @ApiProperty({ description: 'Category name', example: 'Waffles' })
   @IsString()
   name: string;
-  @ApiProperty({ description: 'short description', example: 'fast spoilt' })
+
+  @ApiProperty({ description: 'Short description', example: 'Fast spoilt' })
   @IsString()
   description: string;
-  @ApiProperty({ description: 'timestap manufactured', example: '02-05-2023' })
+
+  @ApiProperty({ description: 'Manufacture timestamp', example: '2023-05-02' })
   @IsDate()
   createdAt: Date;
 }
