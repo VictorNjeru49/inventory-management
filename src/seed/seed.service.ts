@@ -136,7 +136,7 @@ export class SeedService {
         category: categories[i % categories.length],
         supplier: suppliers[i % suppliers.length],
         warehouse: warehouses[i % warehouses.length],
-        sku: faker.number.int(10),
+        sku: faker.string.fromCharacters('ABC', { min: 5, max: 10 }),
         stockQuantity: faker.number.int({ min: 1, max: 100 }),
       })),
     );

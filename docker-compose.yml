@@ -1,51 +1,76 @@
 version: '3.8'
 
 services:
-  user-management-db:
+  inventory-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name:  inventory-app
+    ports:
+      - "8000:8000" 
+    environment:
+      - NODE_ENV=production
+      - PORT = 8000
+      - DB_HOST=inventory-app
+      - NEON_DATABASE_URL=${NEON_DATABASE_URL:-postgresql://restuarantdb_owner:LxfwP7haEW0K@ep-weathered-frost-a5oh2con-pooler.us-east-2.aws.neon.tech/InventoryManagement?sslmode=require}
+      - DE_SYNC=true
+      - DB_LOGGING=false
+      - REDIS_URL= redis://:${REDIS_PASSWORD:-your-secure}@${REDIS_HOST:-redis-cache}${REDIS_PORT:-6379}
+    depends_on:
+      InventoryManagement:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+        - app-networks
+    volumes:
+          - ./applogs:/app/applogs
+
+  InventoryManagement:
     image: postgres:15-alpine
-    container_name: inventory_management-db
+    container_name: InventoryManagement
     restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      # POSTGRES_DB: inventory_management
-      POSTGRES_INITDB_ARGS: '--encoding=UTF-8'
-      NEON_DATABASE_URL: ${NEON_DATABASE_URL}
+      - POSTGRESS_USER:postgres
+      - POSTGRESS_INITDB_ARGS:"--encoding=UTF-8"
     ports:
-      - '5432:5432'
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-      - ./init-scripts:/docker-entrypoint-initdb.d
+    - "5432: 5432"
+    networks:
+      - app-networks
+
+
     healthcheck:
-      test:
-        ['CMD-SHELL', 'pg_isready -U postgres -d inventory_managementsystem-db']
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 60s
-    networks:
-      - app-network
-
   redis:
     image: redis:8.0-alpine
-    container_name: inventory-management-redis-data
+    container_name: redis-cache
     restart: unless-stopped
-    command: ['redis-server', '--requirepass', '${REDIS_PASSWORD}']
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-your_secure_redis_password}
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD:-your_secure_redis_password}"]
     ports:
-      - '6379:6379'
+      - "6379:6379"
     volumes:
-      - redisdata:/data
+      - redis-data:/data
     networks:
-      - app-network
+      - app-networks
+    healthcheck:
+          test: ["executable", "arg"]
+          interval: 1m30s
+          timeout: 30s
+          retries: 5
+    
 
-volumes:
-  pgdata:
-    name: inventory-management-db-data
-    driver: local
-  redisdata:
-    name: redis-cache-data
-    driver: local
-
-networks:
-  app-network:
-    driver: bridge
+  # volumes:
+  #     pgdata:
+  #       name: inventory-app-pgdata
+  #       driver: local
+  #     redis-data:
+  #       name: inventory-InventoryManagement-redis-data
+  #       driver: local
+  # networks:
+  #   app-networks:
+          

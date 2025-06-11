@@ -12,14 +12,14 @@ export class ProductsService {
     private productsRepo: Repository<Product>,
   ) {}
   async create(createProductDto: CreateProductDto): Promise<Product> {
-    const user = this.productsRepo.create(createProductDto);
-    return this.productsRepo.save(user);
+    const product = this.productsRepo.create(createProductDto);
+    return this.productsRepo.save(product);
   }
 
   async findAll(search?: string): Promise<Product[]> {
     if (search) {
       return this.productsRepo.find({
-        where: [{ name: search }, { description: search }],
+        where: [{ name: search }, { description: search }, { sku: search }],
         relations: [
           'category',
           'supplier',

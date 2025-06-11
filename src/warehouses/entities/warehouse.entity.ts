@@ -28,9 +28,15 @@ export class Warehouse {
   @Column({ nullable: true })
   description?: string;
 
-  @OneToMany(() => Inventory, (inventory) => inventory.warehouse)
+  @OneToMany(() => Inventory, (inventory) => inventory.warehouse, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   inventory: Relation<Inventory[]>;
 
-  @OneToMany(() => Product, (product) => product.warehouse)
+  @OneToMany(() => Product, (product) => product.warehouse, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   products: Relation<Product[]>;
 }

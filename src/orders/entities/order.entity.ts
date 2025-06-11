@@ -34,25 +34,29 @@ export class Order {
   @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Pending })
   status: OrderStatus;
 
-  @ManyToOne(() => User, (user) => user.orders)
+  @ManyToOne(() => User, (user) => user.orders, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'userId' })
   user: Relation<User>;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {
     cascade: true,
-    nullable: true,
+    onDelete: 'CASCADE',
   })
   orderItems: Relation<OrderItem[]>;
 
   @OneToMany(() => Shipping, (shipping) => shipping.order, {
     cascade: true,
-    nullable: true,
+    onDelete: 'CASCADE',
   })
   shippings: Relation<Shipping[]>;
+
   // New relationship to Returns
   @OneToMany(() => Return, (returnEntity) => returnEntity.order, {
     nullable: true,
     cascade: true,
+    onDelete: 'CASCADE',
   })
   returns: Return[];
 
@@ -60,6 +64,7 @@ export class Order {
   @OneToMany(() => Transaction, (transaction) => transaction.order, {
     nullable: true,
     cascade: true,
+    onDelete: 'CASCADE',
   })
   transactions: Transaction[];
 }

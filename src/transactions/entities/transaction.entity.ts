@@ -39,17 +39,24 @@ export class Transaction {
   })
   transaction_type: TransactionType;
 
-  @ManyToOne(() => User, (user) => user.transactions)
+  @ManyToOne(() => User, (user) => user.transactions, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'userId' })
   user: Relation<User>;
 
-  @ManyToOne(() => Order, (order) => order.transactions)
+  @ManyToOne(() => Order, (order) => order.transactions, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'orderId' })
   order: Relation<Order>;
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @OneToMany(() => Payment, (payment) => payment.transaction)
+  @OneToMany(() => Payment, (payment) => payment.transaction, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   payments: Payment[];
 }

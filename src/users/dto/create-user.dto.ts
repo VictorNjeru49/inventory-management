@@ -31,7 +31,7 @@ export class CreateUserDto {
   @ApiProperty({ description: 'User role', example: 'ADMIN' })
   @IsString()
   @IsEnum(UserRole, { message: 'Role must be an administrator or user' })
-  role: UserRole;
+  role: UserRole.USER;
 
   @ApiProperty({ description: 'Is the user active?', example: true })
   @IsOptional()

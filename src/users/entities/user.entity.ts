@@ -50,21 +50,25 @@ export class User {
 
   @OneToMany(() => Order, (order) => order.user, {
     cascade: true,
-    nullable: true,
+    onDelete: 'CASCADE',
   })
   orders: Relation<Order[]>;
 
   @OneToMany(() => Return, (returnEntity) => returnEntity.user, {
     cascade: true,
-    nullable: true,
+    onDelete: 'CASCADE',
   })
   returns: Relation<Return[]>;
 
   @OneToMany(() => Transaction, (transaction) => transaction.user, {
     cascade: true,
-    nullable: true,
+    onDelete: 'CASCADE',
   })
   transactions: Relation<Transaction[]>;
-  @OneToMany(() => Register, (register) => register.user)
+
+  @OneToMany(() => Register, (register) => register.user, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   registers: Register[];
 }

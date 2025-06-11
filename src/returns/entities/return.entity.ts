@@ -41,15 +41,21 @@ export class Return {
   @Column({ type: 'enum', enum: ReturnStatus, default: ReturnStatus.PENDING })
   returnStatus: ReturnStatus;
 
-  @ManyToOne(() => Order, (order) => order.returns)
+  @ManyToOne(() => Order, (order) => order.returns, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'orderId' })
   order: Relation<Order>;
 
-  @ManyToOne(() => User, (user) => user.returns)
+  @ManyToOne(() => User, (user) => user.returns, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'userId' })
   user: Relation<User>;
 
-  @ManyToOne(() => Product, (product) => product.returns)
+  @ManyToOne(() => Product, (product) => product.returns, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'productId' })
   product: Relation<Product>;
 
