@@ -92,6 +92,7 @@ export class SeedService {
         lastName: faker.person.lastName(),
         email: faker.internet.email(),
         password: bcrypt.hashSync('password', 10),
+        role: faker.helpers.arrayElement(Object.values(UserRole)),
       })),
     );
     return this.UserRepo.save(users);
