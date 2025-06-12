@@ -35,6 +35,7 @@ async function bootstrap() {
     .addTag('Suppliers', 'Supplier Management Endpoints')
     .addTag('Shipping', 'Shipping Management Endpoints')
     .addTag('Returnee', 'Returns Management Endpoints')
+    .addTag('Seed', 'Seeding data Endpoints')
     .addTag('Register', 'User Registration Endpoints')
     .addTag('Auth', 'Auth Endpoints')
     .addServer(`http://localhost:8000`, 'Local Development Server')
