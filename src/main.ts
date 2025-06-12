@@ -24,39 +24,51 @@ async function bootstrap() {
     .setDescription(
       `
       🏭 Inventory Management System (IMS) 🏭
-            is a robust software solution designed to streamline and optimize the management of inventory across various business sectors. It provides businesses with the tools necessary to track, manage, and control inventory levels, ensuring that the right products are available at the right time while minimizing excess stock and reducing operational costs.
+            is a robust software solution designed to streamline and optimize the management of inventory across various business sectors. 
+            It provides businesses with the tools necessary to track, manage, and control inventory levels, ensuring that the right products 
+            are available at the right time while minimizing excess stock and reducing operational costs.
   
       🔐 Key Features:🔐
       
         1. Real-Time Inventory Tracking: 
-                The system allows for real-time monitoring of inventory levels, enabling businesses to keep an accurate count of stock on hand. This feature helps prevent stockouts and overstock situations, ensuring that inventory levels are always aligned with demand.
+                The system allows for real-time monitoring of inventory levels, enabling businesses to keep an accurate count of stock on hand. 
+                This feature helps prevent stockouts and overstock situations, ensuring that inventory levels are always aligned with demand.
         
         2. Automated Reordering: 
-                The IMS can be configured to automatically reorder products when stock levels fall below a predefined threshold. This automation reduces the risk of running out of essential items and ensures that inventory is replenished in a timely manner.
+                The IMS can be configured to automatically reorder products when stock levels fall below a predefined threshold. 
+                This automation reduces the risk of running out of essential items and ensures that inventory is replenished in a timely manner.
         
         3. Multi-Location Management: 
-                For businesses operating in multiple locations, the inventory system supports multi-location management. Users can easily track inventory across various warehouses, stores, or distribution centers, providing a comprehensive view of stock availability.
+                For businesses operating in multiple locations, the inventory system supports multi-location management. 
+                Users can easily track inventory across various warehouses, stores, or distribution centers, providing a comprehensive view of stock availability.
         
         4. Detailed Reporting and Analytics: 
-                The system offers advanced reporting features that provide insights into inventory turnover rates, sales trends, and stock levels. These analytics help businesses make informed decisions regarding purchasing, sales strategies, and inventory optimization.
+                The system offers advanced reporting features that provide insights into inventory turnover rates, sales trends, and stock levels. 
+                These analytics help businesses make informed decisions regarding purchasing, sales strategies, and inventory optimization.
         
         5. Supplier Management: 
-                The IMS includes tools for managing supplier relationships, allowing users to store supplier information, track purchase orders, and evaluate supplier performance. This feature enhances procurement processes and helps businesses maintain strong supplier partnerships.
+                The IMS includes tools for managing supplier relationships, allowing users to store supplier information, track purchase orders, 
+                and evaluate supplier performance. This feature enhances procurement processes and helps businesses maintain strong supplier partnerships.
         
         6. Barcode and RFID Integration: 
-                To improve accuracy and efficiency in inventory management, the system supports barcode scanning and RFID technology. This integration allows for quick and accurate stock counts, reducing manual entry errors and speeding up the inventory process.
+                To improve accuracy and efficiency in inventory management, the system supports barcode scanning and RFID technology. 
+                This integration allows for quick and accurate stock counts, reducing manual entry errors and speeding up the inventory process.
         
         7. User Access Control: 
-                The inventory system includes user access controls, enabling businesses to define roles and permissions for different users. This feature ensures that sensitive information is protected and that users only have access to the functions necessary for their roles.
+                The inventory system includes user access controls, enabling businesses to define roles and permissions for different users. 
+                This feature ensures that sensitive information is protected and that users only have access to the functions necessary for their roles.
         
         8. Integration with Other Systems: 
-                The IMS can be integrated with other business systems such as accounting software, e-commerce platforms, and ERP systems. This seamless integration enhances operational efficiency by ensuring that all systems work together harmoniously.
+                The IMS can be integrated with other business systems such as accounting software, e-commerce platforms, and ERP systems. 
+                This seamless integration enhances operational efficiency by ensuring that all systems work together harmoniously.
         
         9. Mobile Access: 
-                With mobile compatibility, users can access the inventory system from smartphones and tablets, allowing for on-the-go inventory management. This feature is particularly beneficial for businesses with field operations or those that require remote access.
+                With mobile compatibility, users can access the inventory system from smartphones and tablets, allowing for on-the-go inventory management. 
+                This feature is particularly beneficial for businesses with field operations or those that require remote access.
         
         10. Customizable Dashboards: 
-                Users can customize their dashboards to display key performance indicators (KPIs) and metrics relevant to their business needs. This personalization helps users quickly access the information they need to make data-driven decisions.
+                Users can customize their dashboards to display key performance indicators (KPIs) and metrics relevant to their business needs. 
+                This personalization helps users quickly access the information they need to make data-driven decisions.
   
       Benefits of an Inventory Management System:
       
@@ -75,7 +87,9 @@ async function bootstrap() {
   
       🔚 
       Conclusion: 
-            An effective Inventory Management System is critical for businesses looking to optimize their operations, reduce costs, and improve customer satisfaction. By leveraging advanced features and technology, the IMS empowers businesses to manage their inventory efficiently and effectively, ensuring they remain competitive in a dynamic market environment.
+            An effective Inventory Management System is critical for businesses looking to optimize their operations, reduce costs, and improve customer satisfaction. 
+            By leveraging advanced features and technology, the IMS empowers businesses to manage their inventory efficiently and effectively, 
+            ensuring they remain competitive in a dynamic market environment.
     `,
     )
     .setDescription('To check inventory')
