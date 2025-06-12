@@ -22,7 +22,7 @@ import { RegisterModule } from './register/register.module';
 import { AuthModule } from './auth/auth.module';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { AtGuard } from './auth/guards';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD } from '@nestjs/core';
 import { Keyv, createKeyv } from '@keyv/redis';
 import { CacheableMemory } from 'cacheable';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
@@ -33,6 +33,23 @@ import { CaslModule } from './casl/casl.module';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+    }),
+    CacheModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      isGlobal: true,
+      useFactory: (configService: ConfigService) => {
+        return {
+          ttl: 60000,
+          stores: [
+            new Keyv({
+              store: new CacheableMemory({ ttl: 30000, lruSize: 5000 }),
+            }),
+
+            createKeyv(configService.getOrThrow<string>('REDIS_URL')),
+          ],
+        };
+      },
     }),
     ProductsModule,
     UsersModule,
@@ -50,22 +67,6 @@ import { CaslModule } from './casl/casl.module';
     SeedModule,
     RegisterModule,
     AuthModule,
-    CacheModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      isGlobal: true,
-      useFactory: (configService: ConfigService) => {
-        return {
-          ttl: 60000,
-          stores: [
-            new Keyv({
-              store: new CacheableMemory({ ttl: 30000, lruSize: 5000 }),
-            }),
-            createKeyv(configService.getOrThrow<string>('REDIS_URL')),
-          ],
-        };
-      },
-    }),
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -84,7 +85,7 @@ import { CaslModule } from './casl/casl.module';
     AppService,
     DatabaseService,
     {
-      provide: APP_INTERCEPTOR,
+      provide: 'APP_INTERCEPTOR',
       useClass: CacheInterceptor,
     },
     {
