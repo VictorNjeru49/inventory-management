@@ -1,7 +1,7 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreateRegisterDto } from './create-register.dto';
 import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { UserRole } from '../entities/register.entity';
+import { UserRole } from 'src/users/common/role.enum';
 
 export class UpdateRegisterDto extends PartialType(CreateRegisterDto) {
   @ApiProperty()

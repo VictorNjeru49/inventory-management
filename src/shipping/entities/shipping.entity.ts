@@ -30,7 +30,9 @@ export class Shipping {
   })
   status: ShippingStatus;
 
-  @ManyToOne(() => Order, (order) => order.shippings)
+  @ManyToOne(() => Order, (order) => order.shippings, {
+    onDelete: 'CASCADE',
+  })
   order: Relation<Order>;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

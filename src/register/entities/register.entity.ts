@@ -1,4 +1,5 @@
-import { User } from '../../users/entities/user.entity';
+import { UserRole } from 'src/users/common/role.enum';
+import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   Entity,
@@ -6,11 +7,6 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-
-export enum UserRole {
-  ADMIN = 'admin',
-  USER = 'user',
-}
 
 @Entity()
 export class Register {
@@ -28,6 +24,7 @@ export class Register {
     type: 'enum',
     enum: UserRole,
     default: UserRole.USER,
+    nullable: false,
   })
   role: UserRole;
 

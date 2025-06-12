@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User, UserRole } from '../entities/user.entity';
+import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
+import { UserRole } from 'src/users/common/role.enum';
 
 @Injectable()
 export class ExemptionFilter {

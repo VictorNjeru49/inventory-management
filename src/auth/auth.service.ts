@@ -84,7 +84,7 @@ export class AuthService {
       },
     );
 
-    await this.sendResetPasswordEmail(email, resetToken);
+    // await this.sendResetPasswordEmail(email, resetToken);
     console.log(`The reset access is: ${resetToken}`);
     return `The reset access is: ${resetToken}`;
   }

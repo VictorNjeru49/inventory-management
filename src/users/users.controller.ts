@@ -17,11 +17,11 @@ import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { Public } from 'src/auth/decoractors/public.decorator';
 import { Roles } from 'src/auth/decoractors/role.decorator';
-import { UserRole } from './entities/user.entity';
 import { ExemptionFilter } from './guard/filter.guard';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AtGuard } from 'src/auth/guards';
 import { RoleGuard } from 'src/auth/guards/role.guard';
+import { UserRole } from './common/role.enum';
 
 @ApiTags('Users')
 @ApiBearerAuth('AccessToken')

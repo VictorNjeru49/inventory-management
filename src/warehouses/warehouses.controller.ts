@@ -14,10 +14,10 @@ import {
 import { WarehousesService } from './warehouses.service';
 import { CreateWarehouseDto, UpdateWarehouseDto } from './dto';
 import { Roles } from 'src/auth/decoractors/role.decorator';
-import { UserRole } from 'src/users/entities/user.entity';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AtGuard } from 'src/auth/guards';
 import { RoleGuard } from 'src/auth/guards/role.guard';
+import { UserRole } from 'src/users/common/role.enum';
 
 @ApiTags('Warehouse')
 @ApiBearerAuth('AccessToken')

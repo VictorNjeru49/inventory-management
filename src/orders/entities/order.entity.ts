@@ -12,6 +12,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Transaction } from '../../transactions/entities/transaction.entity';
+import { Payment } from 'src/payments/entities/payment.entity';
 
 export enum OrderStatus {
   Pending = 'pending',
@@ -52,7 +53,6 @@ export class Order {
   })
   shippings: Relation<Shipping[]>;
 
-  // New relationship to Returns
   @OneToMany(() => Return, (returnEntity) => returnEntity.order, {
     nullable: true,
     cascade: true,
@@ -60,7 +60,12 @@ export class Order {
   })
   returns: Return[];
 
-  // New relationship to Transactions
+  @OneToMany(() => Payment, (paymentEntity) => paymentEntity.user, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  payment: Relation<Payment[]>;
+
   @OneToMany(() => Transaction, (transaction) => transaction.order, {
     nullable: true,
     cascade: true,

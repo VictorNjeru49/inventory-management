@@ -1,28 +1,30 @@
-services:
+version: '3.8'  
+
+services:  
   InventoryManagement:
     image: postgres:15-alpine
-    container_name: InventoryManagement
+    container_name: InventoryManagement-prod
     restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: LxfwP7haEW0K
-      POSTGRES_DB: InventoryManagement
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-LxfwP7haEW0K}
+      POSTGRES_DB: ${DB_NAME:-InventoryManagement}
       POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
     ports:
       - "5432:5432"
     networks:
-      - app-networks
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+      - app-network
+    volumes: 
+      - pgdata_prod:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 30s
-      timeout: 10s
+      test: ["CMD-SHELL", "pg_isready -U ${DB_ NAME:-postgres}"]
+      interval: 10s
+      timeout: 5s
       retries: 5
 
   redis:
     image: redis:8.0-alpine
-    container_name: redis-cache
+    container_name: redis-cache-prod
     restart: unless-stopped
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD:-your_secure_redis_password}
@@ -30,29 +32,30 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - redis-data:/data
+      - redis-data_prod:/data
     networks:
-      - app-networks
+      - app-network
     healthcheck:
       test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-your_secure_redis_password}", "ping"]
       interval: 30s
-      timeout: 30s
-      retries: 5
+      timeout: 10s
+      retries: 3
 
-  nest-app:
+  nestjs-app-prod:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: inventory-app
+      dockerfile: Dockerfile.prod
+    container_name: nestjs-app-prod
+    restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "80:8000"
     environment:
       NODE_ENV: production
       PORT: 8000
       DB_HOST: InventoryManagement
       NEON_DATABASE_URL: ${NEON_DATABASE_URL:-postgresql://restuarantdb_owner:LxfwP7haEW0K@ep-weathered-frost-a5oh2con-pooler.us-east-2.aws.neon.tech/InventoryManagement?sslmode=require}
-      DB_SYNC: ${DB_SYNC:-true}
-      DB_LOGGING: ${DB_LOGGING:-false}
+      DB_SYNC: ${DB_SYNC:-false}
+      DB_LOGGING:  ${DB_LOGGING:-false}
       REDIS_URL: redis://:${REDIS_PASSWORD:-password}@${REDIS_HOST:-redis}:${REDIS_PORT:-6379}
       ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET:-your_access_token}
       REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET:-your_refresh_token}
@@ -66,24 +69,29 @@ services:
       THROTTLE_TTL: ${THROTTLE_TTL:-90000}
       THROTTLE_LIMIT: ${THROTTLE_LIMIT:-100}
     depends_on:
-      InventoryManagement:
-        condition: service_healthy
       redis:
         condition: service_healthy
+      InventoryManagement:
+        condition: service_healthy
     networks:
-      - app-networks
-    volumes:
-      - .:/app
-      - /app/node_modules
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
-  pgdata:
-    name: inventory-app-pgdata
+  pgdata_prod:
+    name: inventory-app-pgdata-prod
     driver: local
-  redis-data:
-    name: inventory-InventoryManagement-redis-data
+  redis-data_prod:
+    name: inventory-redis-data-prod
+    driver: local
+  app_logs_prod:
+    name: inventory-app-logs-prod
     driver: local
 
-networks:
-  app-networks:
+networks: 
+  app-network:
     driver: bridge

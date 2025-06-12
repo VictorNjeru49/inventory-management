@@ -17,7 +17,7 @@ import { Public } from 'src/auth/decoractors/public.decorator';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AtGuard } from 'src/auth/guards';
 import { RoleGuard } from 'src/auth/guards/role.guard';
-import { UserRole } from 'src/users/entities/user.entity';
+import { UserRole } from 'src/users/common/role.enum';
 import { Roles } from 'src/auth/decoractors/role.decorator';
 
 @ApiTags('Payments')

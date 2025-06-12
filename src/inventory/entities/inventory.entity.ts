@@ -1,3 +1,4 @@
+import { Payment } from 'src/payments/entities/payment.entity';
 import { Product } from '../../products/entities/product.entity';
 import { Warehouse } from '../../warehouses/entities/warehouse.entity';
 import {
@@ -5,7 +6,9 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
+  Relation,
 } from 'typeorm';
 
 @Entity()
@@ -29,6 +32,12 @@ export class Inventory {
   @ManyToOne(() => Warehouse, (warehouse) => warehouse.inventory)
   @JoinColumn({ name: 'warehouseId' })
   warehouse: Warehouse;
+
+  @OneToMany(() => Payment, (paymentEntity) => paymentEntity.user, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  payment: Relation<Payment[]>;
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

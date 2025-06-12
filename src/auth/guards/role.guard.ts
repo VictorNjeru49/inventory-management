@@ -1,11 +1,12 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User, UserRole } from 'src/users/entities/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { rolesKey } from '../decoractors/role.decorator';
 import { JWTPayLoad } from '../strategies';
 import { Request } from 'express';
+import { UserRole } from 'src/users/common/role.enum';
 
 interface UserRequest extends Request {
   user?: JWTPayLoad;

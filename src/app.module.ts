@@ -26,6 +26,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { Keyv, createKeyv } from '@keyv/redis';
 import { CacheableMemory } from 'cacheable';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { CaslModule } from './casl/casl.module';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
         },
       ],
     }),
+    CaslModule,
   ],
   controllers: [AppController],
   providers: [

@@ -4,7 +4,7 @@ import { DataSource, Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
 
 import { User } from '../users/entities/user.entity';
-import { Register, UserRole } from '../register/entities/register.entity';
+import { Register } from '../register/entities/register.entity';
 import * as bcrypt from 'bcrypt';
 import { Category } from '../categories/entities/category.entity';
 import { Product } from '../products/entities/product.entity';
@@ -20,6 +20,7 @@ import {
   Transaction,
   TransactionType,
 } from '../transactions/entities/transaction.entity';
+import { UserRole } from 'src/users/common/role.enum';
 
 @Injectable()
 export class SeedService {
@@ -246,9 +247,9 @@ export class SeedService {
     const registers = this.RegisterRepo.create(
       Array.from({ length: count }).map((_, i) => ({
         email: users[i % users.length].email,
-        password: 'password',
+        password: users[i % users.length].password,
         user: users[i % users.length],
-        role: faker.helpers.arrayElement(Object.values(UserRole)),
+        role: users[i % users.length].role,
       })),
     );
 

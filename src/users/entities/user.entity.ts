@@ -9,12 +9,8 @@ import {
 } from 'typeorm';
 import { Transaction } from '../../transactions/entities/transaction.entity';
 import { Register } from '../../register/entities/register.entity';
-
-export enum UserRole {
-  ADMIN = 'admin',
-  USER = 'user',
-  MANAGER = 'manager',
-}
+import { UserRole } from '../common/role.enum';
+import { Payment } from 'src/payments/entities/payment.entity';
 
 @Entity()
 export class User {
@@ -59,6 +55,12 @@ export class User {
     onDelete: 'CASCADE',
   })
   returns: Relation<Return[]>;
+
+  @OneToMany(() => Payment, (paymentEntity) => paymentEntity.user, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  payment: Relation<Payment[]>;
 
   @OneToMany(() => Transaction, (transaction) => transaction.user, {
     cascade: true,

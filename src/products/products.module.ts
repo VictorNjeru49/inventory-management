@@ -11,6 +11,7 @@ import { Supplier } from '../suppliers/entities/supplier.entity';
 import { Warehouse } from '../warehouses/entities/warehouse.entity';
 import { RoleGuard } from 'src/auth/guards/role.guard';
 import { User } from 'src/users/entities/user.entity';
+import { CaslModule } from 'src/casl/casl.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { User } from 'src/users/entities/user.entity';
       Warehouse,
       User,
     ]),
+    CaslModule,
   ],
   controllers: [ProductsController],
   providers: [ProductsService, RoleGuard],

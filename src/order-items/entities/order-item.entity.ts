@@ -27,11 +27,15 @@ export class OrderItem {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   totalPrice: number;
 
-  @ManyToOne(() => Order, (order) => order.orderItems)
+  @ManyToOne(() => Order, (order) => order.orderItems, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'orderId' })
   order: Relation<Order>;
 
-  @ManyToOne(() => Product, (product) => product.orderItems)
+  @ManyToOne(() => Product, (product) => product.orderItems, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'productId' })
   product: Relation<Product>;
 }
