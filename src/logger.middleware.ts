@@ -14,7 +14,7 @@ export class LoggerMiddleware {
     res.end = function (...args: Parameters<Response['end']>): Response {
       const duration = Date.now() - start;
       console.log(
-        `[\x1b[33m${new Date().toISOString()}\x1b[0m] \x1b[32m${req.method}\x1b[0m ${req.statusCode} - \x1b[34m${duration}ms\x1b[0m`,
+        `[\x1b[33m${new Date().toISOString()}\x1b[0m] \x1b[32m${req.method}\x1b[0m - \x1b[34m${duration}ms\x1b[0m`,
       );
 
       return originalEnd.apply(res, args) as Response;

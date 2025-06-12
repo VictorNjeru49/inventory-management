@@ -59,7 +59,7 @@ import { CaslModule } from './casl/casl.module';
           ttl: 60000,
           store: [
             new Keyv({
-              store: new CacheableMemory({ ttl: 60000, lruSize: 10000 }),
+              store: new CacheableMemory({ ttl: 30000, lruSize: 5000 }),
             }),
             createKeyv(configService.getOrThrow<string>('REDIS_URL')),
           ],
