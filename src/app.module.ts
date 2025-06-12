@@ -57,7 +57,7 @@ import { CaslModule } from './casl/casl.module';
       useFactory: (configService: ConfigService) => {
         return {
           ttl: 60000,
-          store: [
+          stores: [
             new Keyv({
               store: new CacheableMemory({ ttl: 30000, lruSize: 5000 }),
             }),
