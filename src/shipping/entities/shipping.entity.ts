@@ -31,6 +31,7 @@ export class Shipping {
   status: ShippingStatus;
 
   @ManyToOne(() => Order, (order) => order.shippings, {
+    nullable: true,
     onDelete: 'CASCADE',
   })
   order: Relation<Order>;

@@ -12,6 +12,7 @@ import { Register } from '../../register/entities/register.entity';
 import { UserRole } from '../common/role.enum';
 import { Payment } from 'src/payments/entities/payment.entity';
 
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -26,13 +27,14 @@ export class User {
   @Column({ unique: true, nullable: true })
   email: string;
 
-  @Column()
+
+  @Column({ select: false })
   password: string;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
   role: UserRole;
 
-  @Column({ type: 'text', nullable: true, default: null })
+  @Column({ type: 'text', nullable: true, default: null, select: false })
   hashedRefreshToken: string | null;
 
   @Column({ default: true })

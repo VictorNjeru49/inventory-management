@@ -20,11 +20,11 @@ export class InventoryService {
     if (search) {
       return this.inventoryRepo.find({
         where: [{ stockQty: search }],
-        relations: ['product', 'warehouse'],
+        relations: ['product', 'warehouse', 'payment'],
       });
     }
     return this.inventoryRepo.find({
-      relations: ['product', 'warehouse'],
+      relations: ['product', 'warehouse', 'payment'],
     });
   }
 

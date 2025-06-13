@@ -24,11 +24,11 @@ export class PaymentsService {
           amount: search,
           transactionId: search,
         },
-        relations: ['transaction'],
+        relations: ['transaction', 'order', 'user', 'inventory'],
       });
     }
     return this.paymentRepo.find({
-      relations: ['transaction'],
+      relations: ['transaction', 'order', 'user', 'inventory'],
     });
   }
 

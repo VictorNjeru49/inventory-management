@@ -78,7 +78,7 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
-  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.USER)
+  @Roles(UserRole.ADMIN)
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.remove(id);

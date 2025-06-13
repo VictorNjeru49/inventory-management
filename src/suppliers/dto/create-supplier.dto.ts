@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateSupplierDto {
   @ApiProperty({ description: 'Supplier name', example: 'ABC Supplies' })
@@ -16,8 +16,4 @@ export class CreateSupplierDto {
   })
   @IsString()
   address: string;
-
-  @ApiProperty({ description: 'Creation date', example: '2023-05-02' })
-  @IsDate()
-  createdAt: Date;
 }

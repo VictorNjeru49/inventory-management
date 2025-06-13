@@ -42,6 +42,7 @@ export class Return {
   returnStatus: ReturnStatus;
 
   @ManyToOne(() => Order, (order) => order.returns, {
+    nullable: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'orderId' })

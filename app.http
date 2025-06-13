@@ -1,14 +1,48 @@
 @url = http://localhost:8000/api
-@AccessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiTWFyaWx5bmUuTGVta2U3NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk1NzQzMDUsImV4cCI6MTc0OTU3NTIwNX0.p1AweZJzozhvkYVRHTsxpIRWvg9lhMZg-JQJlHBIyfM
+@AccessToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjU4LCJlbWFpbCI6IkdhcmZpZWxkX1NjaG5laWRlci1BdWZkZXJoYXI4MEB5YWhvby5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTc0OTgwOTUxNiwiZXhwIjoxNzQ5ODEwNDE2fQ.xHMbDEmGhqlKtsJHoMS-BCZsOfXCRy9QJyxPd30Bhdg
 @RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiTWFyaWx5bmUuTGVta2U3NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk1NzI0MDQsImV4cCI6MTc1MDE3NzIwNH0.xWNGUAjsHTV_4d63iDK4w2Ay3j1koQNpt9S7D_j3S7k
+#######################################################################
+
+                  ADMIN LOGIN 63
+
+##############################################################################
+POST {{url}}/auth/signin    
+Content-Type: application/json
+
+{
+  "email": "andreastailas96@gmail.com",
+  "password": "password"
+}
+
+#######################################################################
+
+                  USER LOGIN  58
+                  
+##############################################################################
 
 POST {{url}}/auth/signin
 Content-Type: application/json
 
 {
-  "email": "Garland58@gmail.com",
+  "email": "Garfield_Schneider-Aufderhar80@yahoo.com",
   "password": "password"
 }
+
+#######################################################################
+
+                  MANAGER LOGIN 53
+                  
+##############################################################################
+
+POST {{url}}/auth/signin
+Content-Type: application/json
+
+{
+  "email": "Ernest.Kihn@gmail.com",
+  "password": "password"
+}
+
+
 
 ###
 POST {{url}}/users
@@ -24,7 +58,7 @@ Content-Type: application/json
 
 ###
 # Users
-GET {{url}}/users
+GET {{url}}/returns
 Authorization: Bearer {{AccessToken}}
 
 ###
@@ -56,12 +90,13 @@ Authorization: Bearer {{AccessToken}}
 GET {{url}}/orders
 Authorization: Bearer {{AccessToken}}
 
+
 ###
 POST {{url}}/auth/forget-password
 Content-Type: application/json
 
 {
-  "email": "andreastailas96@gmail.com"
+  "email": "Eusebio.Raynor@gmail.com"
 }
 
 
@@ -75,3 +110,8 @@ Content-Type: application/json
   "token": "{{resetToken}}",
   "newPassword": "new_secure_password"
 }
+
+
+
+###
+GET {{url}}/apps

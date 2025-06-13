@@ -1,4 +1,4 @@
-import { IsDate, IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsString } from 'class-validator';
 import { ReturnStatus } from '../entities/return.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -35,11 +35,4 @@ export class CreateReturnDto {
   })
   @IsEnum(ReturnStatus)
   returnStatus: ReturnStatus; // e.g., 'pending', 'approved', 'rejected'
-
-  @ApiProperty({
-    description: 'Creation date of the return record',
-    example: '2023-06-01',
-  })
-  @IsDate()
-  createdAt: Date; // Defaults to current timestamp
 }

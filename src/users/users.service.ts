@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as Bcrypt from 'bcrypt';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UsersService {
@@ -17,16 +17,21 @@ export class UsersService {
     return await Bcrypt.hash(data, salt);
   }
 
-  // Helper method to remove password from profile
-  private excludePassword(user: User): Partial<User> {
-    const { password, hashedRefreshToken, ...rest } = user;
-    return rest;
-  }
+  // private excludePassword(user: User): Partial<User> {
+  //   const { password, hashedRefreshToken, ...rest } = user;
+  //   return rest;
+  // }
+  // private excludeSensitiveFields(
+  //   user: User,
+  // ): Omit<User, 'password' | 'hashedRefreshToken' | 'role'> {
+  //   const { password, hashedRefreshToken, role, ...safeUser } = user;
+  //   return safeUser;
+  // }
 
   async create(createUserDto: CreateUserDto): Promise<Partial<User>> {
     const existingUser = await this.userRepo.findOne({
       where: { email: createUserDto.email },
-      select: ['id'], // Only select the id to avoid loading the entire profile
+      select: ['id'],
     });
     if (existingUser) {
       throw new Error(
@@ -40,28 +45,54 @@ export class UsersService {
     });
     const savedProfile = await this.userRepo.save(user);
 
-    return this.excludePassword(savedProfile);
+    return savedProfile;
   }
 
   async findAll(search?: string): Promise<User[]> {
+    let users: User[];
     if (search) {
       console.log(
         `This action returns all users matching the search term: ${search}`,
       );
-      return this.userRepo.find({
+      users = await this.userRepo.find({
         where: [{ firstName: search }, { lastName: search }, { email: search }],
-        relations: ['orders', 'returns', 'transactions', 'registers'],
+        relations: ['orders', 'returns', 'payment', 'transactions'],
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+        },
+      });
+    } else {
+      console.log(`This action returns all users`);
+      users = await this.userRepo.find({
+        relations: ['orders', 'returns', 'payment', 'transactions'],
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+        },
       });
     }
 
-    console.log(`This action returns all users`);
-    return this.userRepo.find({
-      relations: ['orders', 'returns', 'transactions', 'registers'],
-    });
+    return users;
   }
 
-  findOne(id: number): Promise<User | null> {
-    return this.userRepo.findOneBy({ id });
+  async findOne(id: number): Promise<User | null> {
+    const user = await this.userRepo.findOne({
+      where: { id },
+      relations: ['orders', 'returns', 'payment', 'transactions'],
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+      },
+    });
+
+    return user || null;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {

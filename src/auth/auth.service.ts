@@ -120,10 +120,12 @@ export class AuthService {
   }
 
   async SignIn(createAuthDto: CreateAuthDto) {
-    const foundUser = await this.userRepository.findOne({
-      where: { email: createAuthDto.email },
-      select: ['id', 'email', 'password', 'role', 'hashedRefreshToken'],
-    });
+    const email = createAuthDto.email;
+    const foundUser = await this.userRepository
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.email = :email', { email })
+      .getOne();
 
     if (!foundUser) {
       throw new NotFoundException(

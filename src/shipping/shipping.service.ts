@@ -20,11 +20,11 @@ export class ShippingService {
     if (search) {
       return this.shippingRepo.find({
         where: [{ trackingNumber: search }],
-        relations: ['orders'],
+        relations: ['order'],
       });
     }
     return this.shippingRepo.find({
-      relations: ['orders'],
+      relations: ['order'],
     });
   }
 

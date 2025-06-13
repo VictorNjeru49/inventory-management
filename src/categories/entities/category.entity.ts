@@ -21,6 +21,6 @@ export class Category {
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @OneToMany(() => Product, (product) => product.categoryId)
+  @OneToMany(() => Product, (product) => product.category)
   products: Relation<Product[]>;
 }

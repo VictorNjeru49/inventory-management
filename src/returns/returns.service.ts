@@ -23,16 +23,38 @@ export class ReturnsService {
           { productId: search },
           { userId: search },
         ],
-        relations: ['orders', 'user', 'product'],
+        relations: ['order', 'user', 'product'],
+        select: {
+          id: true,
+          quantity: true,
+          returnReason: true,
+          returnStatus: true,
+        },
       });
     }
     return this.returnRepo.find({
-      relations: ['orders', 'user', 'product'],
+      relations: ['order', 'user', 'product'],
+      select: {
+        id: true,
+        quantity: true,
+        returnReason: true,
+        returnStatus: true,
+      },
     });
   }
 
   async findOne(id: number): Promise<Return | null> {
-    return this.returnRepo.findOneBy({ id });
+    const returnItem = await this.returnRepo.findOne({
+      where: { id },
+      relations: ['order', 'user', 'product'],
+      select: {
+        id: true,
+        quantity: true,
+        returnReason: true,
+        returnStatus: true,
+      },
+    });
+    return returnItem || null;
   }
 
   async update(

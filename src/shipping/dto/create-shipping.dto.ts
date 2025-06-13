@@ -27,11 +27,4 @@ export class CreateShippingDto {
   })
   @IsDate()
   shippedAt: Date;
-
-  @ApiProperty({
-    description: 'Creation date of the shipping record',
-    example: '2023-06-01',
-  })
-  @IsDate()
-  createdAt: Date;
 }

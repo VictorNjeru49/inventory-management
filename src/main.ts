@@ -9,7 +9,7 @@ import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(helmet());
+  app.use(helmet({}));
   app.enableCors({
     origin: '*',
     methods: 'GET, POST, DELETE, PATCH, PUT, HEAD',
@@ -17,7 +17,12 @@ async function bootstrap() {
     credentials: true,
   });
   app.setGlobalPrefix('api');
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+    }),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Inventory Api')
@@ -138,6 +143,7 @@ An effective Inventory Management System is critical for businesses looking to o
 
   await app.listen(PORT, () => {
     console.log(`The Server Port is listening at http://localhost:${PORT}/api`);
+    console.log('Redis URL:', process.env.REDIS_URL);
   });
 }
 bootstrap();

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNumber } from 'class-validator';
+import { IsNumber } from 'class-validator';
 
 export class CreateInventoryDto {
   @ApiProperty({ description: 'Product ID', example: 1 })
@@ -13,8 +13,4 @@ export class CreateInventoryDto {
   @ApiProperty({ description: 'Quantity in stock', example: 100 })
   @IsNumber()
   stockQty: number;
-
-  @ApiProperty({ description: 'Creation date', example: '2023-05-02' })
-  @IsDate()
-  createdAt: Date;
 }

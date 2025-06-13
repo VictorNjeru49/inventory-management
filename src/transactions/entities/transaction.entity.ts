@@ -46,6 +46,7 @@ export class Transaction {
   user: Relation<User>;
 
   @ManyToOne(() => Order, (order) => order.transactions, {
+    nullable: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'orderId' })
